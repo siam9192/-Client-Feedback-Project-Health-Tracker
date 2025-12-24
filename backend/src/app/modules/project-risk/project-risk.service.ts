@@ -1,0 +1,86 @@
+import AppError from '../../errors/AppError';
+import { calculatePagination } from '../../helpers/pagination.helper';
+import { objectId } from '../../helpers/utils.helper';
+import { PaginationOptions } from '../../types';
+import httpStatus from '../../utils/http-status';
+import { AuthUser } from '../auth/auth.interface';
+import {
+  CreateProjectRiskPayload,
+  ProjectRisksFilterQuery,
+} from './project-risk.interface';
+import { ProjectRiskModel } from './project-risk.model';
+import projectRiskValidations from './project-risk.validation';
+
+class ProjectRiskService {
+  async createRisk(authUser: AuthUser, payload: CreateProjectRiskPayload) {
+    // Validate payload
+    payload = projectRiskValidations.createRiskSchema.parse(payload);
+
+    //Fetch project
+    const project = await ProjectRiskModel.findById(payload.projectId);
+
+    // Check project existence
+    if (!project) throw new AppError(httpStatus.NOT_FOUND, 'Project not found');
+
+    if (project.employee.toString() !== authUser.profileId)
+      throw new AppError(
+        httpStatus.FORBIDDEN,
+        'You have no access to create risk for this project ',
+      );
+
+    const { projectId, ...others } = payload;
+
+    // Arrange create data
+    const data = {
+      ...others,
+      project: objectId(projectId),
+      employee: objectId(authUser.profileId),
+    };
+
+    // Create risk
+    return await ProjectRiskModel.create(data);
+  }
+
+  async getRisks(
+    filterQuery: ProjectRisksFilterQuery,
+    paginationOptions: PaginationOptions,
+  ) {
+    const { page, limit, skip, sortBy, sortOrder } =
+      calculatePagination(paginationOptions);
+
+    const whereConditions = {
+      ...filterQuery,
+    };
+
+    // Fetch risks
+    const data = await ProjectRiskModel.find(whereConditions)
+      .sort({ [sortBy]: sortOrder })
+      .skip(skip)
+      .limit(limit)
+      .populate([
+        {
+          path: 'employee',
+          select: '_id name profilePicture',
+        },
+        {
+          path: 'project',
+          select: '_id name status healthScore',
+        },
+      ]);
+
+    // Count  risks
+    const totalResults = await ProjectRiskModel.countDocuments(whereConditions);
+
+    // Return result
+    return {
+      data,
+      meta: {
+        page,
+        limit,
+        totalResults,
+      },
+    };
+  }
+}
+
+export default new ProjectRiskService();

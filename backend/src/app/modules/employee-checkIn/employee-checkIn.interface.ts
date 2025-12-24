@@ -1,6 +1,6 @@
 import { Types } from 'mongoose';
 import z from 'zod';
-import employeeCheckInValidations from './employeeCheckIn.validation';
+import employeeCheckInValidations from './employee-checkIn.validation';
 
 export interface EmployeeCheckIn extends Document {
   progressSummary: string;

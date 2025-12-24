@@ -2,10 +2,10 @@ import { paginationOptionPicker } from '../../helpers/pagination.helper';
 import catchAsync from '../../utils/catchAsync';
 import httpStatus from '../../utils/http-status';
 import { sendSuccessResponse } from '../../utils/response';
-import employeeCheckInService from './employeeCheckIn.service';
+import employeeCheckInService from './employee-checkIn.service';
 
 class CheckInController {
-  createProject = catchAsync(async (req, res) => {
+  createCheckIn = catchAsync(async (req, res) => {
     const result = await employeeCheckInService.createCheckIn(
       req.user,
       req.body,
@@ -16,6 +16,7 @@ class CheckInController {
       data: result,
     });
   });
+
   getPendingCheckIns = catchAsync(async (req, res) => {
     const result = await employeeCheckInService.getPendingCheckIns(
       req.user,
@@ -25,6 +26,18 @@ class CheckInController {
       message: 'Pending checkins retrieved successfully',
       statusCode: httpStatus.OK,
       data: result,
+    });
+  });
+
+  getCheckInsByProjectId = catchAsync(async (req, res) => {
+    const result = await employeeCheckInService.getCheckInsByProjectId(
+      req.params.projectId,
+      paginationOptionPicker(req.query),
+    );
+    sendSuccessResponse(res, {
+      message: 'Project feedbacks retrieved successfully',
+      statusCode: httpStatus.OK,
+      ...result,
     });
   });
 }

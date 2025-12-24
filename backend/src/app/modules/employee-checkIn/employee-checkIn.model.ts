@@ -1,5 +1,5 @@
 import { Schema, model, Types } from 'mongoose';
-import { EmployeeCheckIn } from './employeeCheckIn.interface';
+import { EmployeeCheckIn } from './employee-checkIn.interface';
 
 const EmployeeCheckInSchema = new Schema<EmployeeCheckIn>(
   {

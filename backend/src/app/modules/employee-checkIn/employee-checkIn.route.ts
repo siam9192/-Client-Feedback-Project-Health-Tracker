@@ -1,13 +1,13 @@
 import { Router } from 'express';
 import auth from '../../middlewares/auth';
-import employeeCheckInController from './employeeCheckIn.controller';
+import employeeCheckInController from './employee-checkIn.controller';
 import { UserRole } from '../user/user.interface';
 
 const router = Router();
 router.post(
   '/',
   auth(UserRole.EMPLOYEE),
-  employeeCheckInController.createProject,
+  employeeCheckInController.createCheckIn,
 );
 
 router.get(

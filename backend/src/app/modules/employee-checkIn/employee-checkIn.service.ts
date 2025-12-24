@@ -6,14 +6,18 @@ import httpStatus from '../../utils/http-status';
 import { AuthUser } from '../auth/auth.interface';
 import { ProjectStatus } from '../project/project.interface';
 import { ProjectModel } from '../project/project.model';
-import { CreateEmployeeCheckInPayload } from './employeeCheckIn.interface';
-import { EmployeeCheckInModel } from './employeeCheckIn.model';
+import { CreateEmployeeCheckInPayload } from './employee-checkIn.interface';
+import { EmployeeCheckInModel } from './employee-checkIn.model';
+import employeeCheckInValidations from './employee-checkIn.validation';
 
 class EmployeeCheckInService {
   async createCheckIn(
     authUser: AuthUser,
     payload: CreateEmployeeCheckInPayload,
   ) {
+    // Validate payload
+    payload = employeeCheckInValidations.createCheckInSchema.parse(payload);
+
     //Fetch project
     const project = await ProjectModel.findById(payload.project).select(
       '_id employees',
@@ -138,6 +142,38 @@ class EmployeeCheckInService {
     const data = result[0].data || [];
     const totalResults = result[0]?.totalCount[0]?.count || 0;
 
+    return {
+      data,
+      meta: {
+        page,
+        limit,
+        totalResults,
+      },
+    };
+  }
+
+  async getCheckInsByProjectId(
+    projectId: string,
+    paginationOptions: PaginationOptions,
+  ) {
+    const { page, limit, skip, sortBy, sortOrder } =
+      calculatePagination(paginationOptions);
+
+    // Fetch feedbacks
+    const data = await EmployeeCheckInModel.find({
+      project: objectId(projectId),
+    })
+      .sort({ [sortBy]: sortOrder })
+      .skip(skip)
+      .limit(limit)
+      .populate('employee', '_id name profilePicture');
+
+    // Count feedbacks
+    const totalResults = await EmployeeCheckInModel.countDocuments({
+      project: objectId(projectId),
+    });
+
+    // Return result
     return {
       data,
       meta: {
