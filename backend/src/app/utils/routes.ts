@@ -14,7 +14,7 @@ const moduleRoutes: TModuleRoutes = [
   { path: '/projects', router: projectRouter },
   { path: '/employee-checkins', router: employeeCheckInRouter },
   { path: '/client-feedback', router: clientFeedbackRouter },
-  { path: '/project-risks', router: projectRiskRouter }
+  { path: '/project-risks', router: projectRiskRouter },
 ];
 
 const routes = moduleRoutes.map((route) =>

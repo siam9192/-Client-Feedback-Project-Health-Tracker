@@ -14,7 +14,7 @@ import { objectId } from '../../helpers/utils.helper';
 import { PaginationOptions } from '../../types';
 import { calculatePagination } from '../../helpers/pagination.helper';
 import { AuthUser } from '../auth/auth.interface';
-import { ObjectId, Types } from 'mongoose';
+import { Types } from 'mongoose';
 
 class ProjectService {
   async createProject(payload: CreateProjectPayload) {
@@ -132,6 +132,7 @@ class ProjectService {
       },
     };
   }
+
   async getAllGroupProjectsByHealthStatus() {
     //  Aggregate projects grouped by status
     const groups = await ProjectModel.aggregate([
@@ -192,6 +193,46 @@ class ProjectService {
     });
 
     return result;
+  }
+
+  async getProjectById(authUser: AuthUser, id: string) {
+    // Fetch project
+    const project = await ProjectModel.findById(id).populate([
+      {
+        path: 'employees',
+        select: '_id name profilePicture',
+      },
+      {
+        path: 'client', // Assuming you have a client field
+        select: '_id name companyName profilePicture',
+      },
+    ]);
+
+    if (!project) throw new AppError(httpStatus.NOT_FOUND, 'Project not found');
+
+    //  Authorization
+    if (authUser.role === UserRole.EMPLOYEE) {
+      const isAssigned = project.employees.some(
+        (emp) => emp._id.toString() === authUser.profileId,
+      );
+      if (!isAssigned) {
+        throw new AppError(
+          httpStatus.FORBIDDEN,
+          'You are not assigned to this project',
+        );
+      }
+    } else if (authUser.role === UserRole.CLIENT) {
+      // Check if the client owns this project
+      if (project.client?.toString() !== authUser.profileId) {
+        throw new AppError(
+          httpStatus.FORBIDDEN,
+          'You do not have access to this project',
+        );
+      }
+    }
+
+    // Return project as result 
+    return project;
   }
 
   async getHighRiskProjects() {}

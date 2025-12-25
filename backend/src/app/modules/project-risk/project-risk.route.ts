@@ -6,7 +6,7 @@ import projectRiskController from './project-risk.controller';
 const router = Router();
 router.post('/', auth(UserRole.CLIENT), projectRiskController.createRisk);
 
-router.get('/', auth(UserRole.CLIENT), projectRiskController.getRisks);
+router.get('/', auth(UserRole.EMPLOYEE), projectRiskController.getRisks);
 
 const projectRiskRouter = router;
 
