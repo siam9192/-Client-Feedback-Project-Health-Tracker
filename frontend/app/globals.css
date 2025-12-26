@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+@import "tailwindcss";
+
+:root {
+   /* ---------- Base ---------- */
+  --color-base-100: oklch(100% 0 0);          /* pure white */
+  --color-base-200: oklch(98% 0.005 240);     /* light gray bg */
+  --color-base-300: oklch(95% 0.01 240);      /* borders/dividers */
+  --color-base-content: oklch(18% 0.03 240);  /* primary text */
+
+  /* ---------- Background / Foreground ---------- */
+  --color-background: var(--color-base-200);
+  --color-foreground: var(--color-base-content);
+
+  /* ---------- Brand ---------- */
+  /* Primary: Indigo / Purple-Blue */
+  --color-primary: rgb(140, 0, 255);
+  --color-primary-content: oklch(98% 0.01 265);
+
+  /* Secondary: Teal */
+  --color-secondary: rgb(255, 63, 127);
+  --color-secondary-content: oklch(98% 0.01 175);
+
+  --color-accent: oklch(65% 0.25 160);        /* green accent */
+  --color-accent-content: oklch(98% 0.01 160);
+
+  /* ---------- Neutral UI ---------- */
+  --color-neutral: oklch(40% 0.04 240);       /* sidebar / muted buttons */
+  --color-neutral-content: oklch(98% 0.01 240);
+
+  /* ---------- States ---------- */
+  --color-info: oklch(70% 0.20 220);          /* info badges */
+  --color-info-content: oklch(98% 0.01 220);
+
+  --color-success: oklch(65% 0.25 140);       /* completed tasks */
+  --color-success-content: oklch(98% 0.01 140);
+
+  --color-warning: oklch(80% 0.25 80);        /* at-risk */
+  --color-warning-content: oklch(20% 0.05 80);
+
+  --color-error: oklch(65% 0.30 30);          /* blocked / overdue */
+  --color-error-content: oklch(98% 0.01 30);
+
+  /* ---------- Layout ---------- */
+  --radius-selector: 1rem;
+  --radius-field: 0.375rem;
+  --radius-box: 0.75rem;
+
+  --border: 1px;
+  --depth: 1;
+  --noise: 0;
+
+
+ --font-primary: 'Inter', "sans-serif";
+ --font-secondary: 'Poppins', "sans-serif";
+
+}
+
+@theme inline {
+
+ /* Core */
+  --background: var(--color-background);
+  --foreground: var(--color-foreground);
+
+  /* Brand */
+  --primary: var(--color-primary);
+  --primary-foreground: var(--color-primary-content);
+
+  --secondary: var(--color-secondary);
+  --secondary-foreground: var(--color-secondary-content);
+
+  --accent: var(--color-accent);
+  --accent-foreground: var(--color-accent-content);
+
+  /* UI */
+  --muted: var(--color-base-300);
+  --border: var(--color-base-300);
+  --card: var(--color-base-100);
+  --card-foreground: var(--color-foreground);
+
+  /* States */
+  --info: var(--color-info);
+  --success: var(--color-success);
+  --warning: var(--color-warning);
+  --error: var(--color-error);
+
+  /* Fonts */
+  --font-primary:var(--font-primary)
+  --font-secondary:var(--font-primary)
+
+}
+
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-primary);
+}
+
+
+
+
+button:hover {
+  cursor: pointer;
+}
+
+button:disabled:hover {
+  cursor: default;
+}
