@@ -1,92 +1,120 @@
-
+'use client';
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useUserLoginMutation } from "../../query/services/auth.service";
-import { toast } from "sonner";
-import { queryClient } from "../../App";
+import { toast } from "sonner"
+import Link from "next/link";
 
-type LoginFormValues = z.infer<typeof authValidation.userLoginSchema>;
+import validators from "@/utils/validators";
+import { useLoginMutation } from "@/services/query-client/auth.client.service";
 
-function LoginPage() {
+
+type LoginFormValues = z.infer<typeof validators.loginSchema>;
+
+function page() {
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
   } = useForm<LoginFormValues>({
-    resolver: zodResolver(authValidation.userLoginSchema),
+    resolver: zodResolver(validators.loginSchema),
   });
-  const { mutate } = useUserLoginMutation();
+  const { mutate } = useLoginMutation();
   
   const onSubmit = (data: LoginFormValues) => {
     mutate(data, {
       onSuccess: () => {
         toast.success("Login successful");
         reset();
-        queryClient.invalidateQueries({ queryKey: ["getCurrentUser"] });
+       
       
       },
       onError: (err) => {
+        console.log(err)
         toast.error(err.message);
       },
+      invalidateKeys:["currenUser"]
     });
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center  px-4">
-      <div className="bg-base-100 p-8 rounded-2xl shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">Login to your account</h2>
+ <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+  <div className="bg-white p-6 md:p-10 rounded-3xl shadow-xl w-full max-w-md">
+  <div className="space-y-5 mb-8">
+      <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center text-gray-900">
+      Welcome Back
+    </h2>
+    <p className="text-center text-gray-500 ">
+      Login to your account to continue
+    </p>
+  </div>
 
-        <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-          {/* Identifier */}
-          <div className="form-control w-full">
-            <label className="label">
-              <span className="label-text">Username or Email</span>
-            </label>
-            <input
-              type="text"
-              placeholder="Enter username or email"
-              className={`input input-bordered w-full ${errors.identifier ? "input-error" : ""}`}
-              {...register("identifier")}
-            />
-            {errors.identifier && (
-              <p className="text-error text-sm mt-1">{errors.identifier.message}</p>
-            )}
-          </div>
-
-          {/* Password */}
-          <div className="form-control w-full">
-            <label className="label">
-              <span className="label-text">Password</span>
-            </label>
-            <input
-              type="password"
-              placeholder="Enter your password"
-              className={`input input-bordered w-full ${errors.password ? "input-error" : ""}`}
-              {...register("password")}
-            />
-            {errors.password && (
-              <p className="text-error text-sm mt-1">{errors.password.message}</p>
-            )}
-          </div>
-
-          {/* Login Button */}
-          <button type="submit" className="btn btn-primary w-full mt-4" disabled={isSubmitting}>
-            {isSubmitting ? "Logging in..." : "Login"}
-          </button>
-        </form>
-
-        {/* Signup link */}
-        <p className="text-center text-sm opacity-70 mt-4">
-          Don't have an account?{" "}
-          <Link to="/register" className="text-primary font-medium">
-            Register
-          </Link>
-        </p>
+    <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+      {/* Email */}
+      <div className="form-control w-full">
+        <label className="label">
+          <span className="label-text font-medium">Email</span>
+        </label>
+        <input
+          type="text"
+          placeholder="Enter username or email"
+          className={`w-full px-4 py-3 rounded-lg border-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition ${
+            errors.email ? "border-red-500" : "border-gray-300"
+          }`}
+          {...register("email")}
+        />
+        {errors.email && (
+          <p className="text-red-600 text-sm mt-1">{errors.email.message}</p>
+        )}
       </div>
+
+      {/* Password */}
+      <div className="form-control w-full">
+        <label className="label">
+          <span className="label-text font-medium">Password</span>
+        </label>
+        <input
+          type="password"
+          placeholder="Enter your password"
+          className={`w-full px-4 py-3 rounded-lg border-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition ${
+            errors.password ? "border-red-500" : "border-gray-300"
+          }`}
+          {...register("password")}
+        />
+        {errors.password && (
+          <p className="text-red-600 text-sm mt-1">{errors.password.message}</p>
+        )}
+      </div>
+
+      {/* Login Button */}
+      <button
+        type="submit"
+        className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg transition shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? "Logging in..." : "Login"}
+      </button>
+    </form>
+
+    {/* Separator */}
+    <div className="flex items-center my-6">
+      <span className="grow h-px bg-gray-300"></span>
+      <span className="mx-3 text-gray-400">or</span>
+      <span className="grow h-px bg-gray-300"></span>
     </div>
+
+    {/* Signup Link */}
+    <p className="text-center text-sm text-gray-500 ">
+      Don't have an account?{" "}
+      <Link href="/register" className="text-indigo-600 font-medium hover:underline">
+        Register
+      </Link>
+    </p>
+  </div>
+</div>
+
   );
 }
 
-export default LoginPage;
+export default page;

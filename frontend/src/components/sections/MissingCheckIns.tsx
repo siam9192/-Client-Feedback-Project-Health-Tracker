@@ -64,7 +64,7 @@ export default function MissingCheckIns() {
           <thead className="bg-gray-100">
             <tr>
               <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Project Name</th>
-              <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Project Manager</th>
+            
               <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Client</th>
               <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Team Members</th>
               <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Status</th>
@@ -77,7 +77,7 @@ export default function MissingCheckIns() {
             {missingCheckIns.map((project, idx) => (
               <tr key={idx} className="hover:bg-gray-50">
                 <td className="px-4 py-2 text-gray-700 font-medium">{project.name}</td>
-                <td className="px-4 py-2 text-gray-700">{project.projectManager}</td>
+        
                 <td className="px-4 py-2 text-gray-700">{project.client}</td>
                 <td className="px-4 py-2 text-gray-700">
                   {project.teamMembers.join(", ")}

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Providers from "./Providers";
+import Providers from "../Providers";
 import '@fontsource-variable/montserrat';
 import '@fontsource/poppins/400.css';
 import '@fontsource/poppins/500.css';
