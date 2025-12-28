@@ -1,10 +1,10 @@
-'use client';
+"use client";
 import { useState, useEffect, useCallback } from "react";
 import { queryCache } from "@/utils/queryCache";
 
 type UseQueryOptions = {
   enabled?: boolean;
-  staleTime?: number; 
+  staleTime?: number;
 };
 export type UseQueryResult<T> = {
   data: T | null;
@@ -17,12 +17,7 @@ export type UseQueryResult<T> = {
   refetchAsync: () => Promise<void>;
 };
 
-
-function useQuery<T>(
-  key: string,
-  queryFn: () => Promise<T>,
-  options: UseQueryOptions = {}
-) {
+function useQuery<T>(key: string, queryFn: () => Promise<T>, options: UseQueryOptions = {}) {
   const { enabled = true, staleTime = 0 } = options;
 
   const [data, setData] = useState<T | null>(null);
@@ -59,16 +54,16 @@ function useQuery<T>(
         else setIsLoading(false);
       }
     },
-    [key, queryFn, staleTime]
+    [key, queryFn, staleTime],
   );
 
   // trigger fetch on mount or enabled toggle
   const [toggleRefetch, setToggleRefetch] = useState(true);
   useEffect(() => {
+    console.log(key, enabled);
     if (!enabled) return;
     fetchData();
-   
-  }, [enabled, toggleRefetch]); 
+  }, [enabled, toggleRefetch]);
 
   return {
     data,

@@ -1,102 +1,89 @@
-'use client'
-import { useState } from "react";
+"use client";
+
+import { useState, useMemo } from "react";
+import { Project } from "@/types/project.type";
 import ActivitiesDialog from "../sections/ActivitiesDialog";
+import { formatEnumLabel, getProjectStatusColor } from "@/utils/helpers";
+import ProjectDetailsDialog from "../sections/ProjectDetailsDialog";
 
-const fakeProject = {
-  name: "Project Apollo",
-  description: "Building a scalable project management platform for enterprise clients.",
-  startDate: new Date("2025-10-01"),
-  endDate: new Date("2026-02-15"),
-  status: "At Risk",
-  progressPercentage: 62,
-  healthScore: 48,
-  createdAt: new Date(),
-  updatedAt: new Date(),
-  client: {
-    _id: "87647y4he3",
-    name: "TechNova Ltd",
-  },
-  employees: [
-    { _id: "87647y4he3", name: "Arafat Hasan" },
-    { _id: "87647y4he3", name: "Rony" },
-    { _id: "87647y4he3", name: "Sara Khan" },
-  ],
-};
+interface ProjectCardProps {
+  project: Project;
+}
 
-function ProjectCard() {
-  const project = fakeProject;
-  const [showActivities,setShowActivities] = useState(false)
-  const statusColor =
-    project.status === "Critical"
-      ? "text-red-600 bg-red-50"
-      : project.status === "At Risk"
-      ? "text-yellow-600 bg-yellow-50"
-      : "text-green-600 bg-green-50";
+function ProjectCard({ project }: ProjectCardProps) {
+  const [showActivities, setShowActivities] = useState(false);
+  const [showDetails, setShowDetails] = useState(false);
 
-  const healthColor =
-    project.healthScore < 40
-      ? "text-red-600"
-      : project.healthScore < 70
-      ? "text-yellow-600"
-      : "text-green-600";
+  const startDate = useMemo(() => new Date(project.startDate), [project.startDate]);
+  const endDate = useMemo(() => new Date(project.endDate), [project.endDate]);
+  const today = new Date();
+
+  const hasStarted = startDate.getTime() <= today.getTime();
+
+  const progress = hasStarted ? project.progressPercentage : 0;
 
   return (
-    <div className="bg-white rounded-xl shadow p-5 hover:shadow-md transition font-secondary">
+    <div className="bg-white rounded-2xl shadow-sm p-5 hover:shadow-md transition border border-gray-100">
       {/* Header */}
-      <div className="flex justify-between items-start mb-3 font-primary">
-        <div >
-          <h3 className="text-lg font-semibold text-gray-800">
-            {project.name}
-          </h3>
-          <p className="text-sm text-gray-500">
-            Client: {project.client.name}
-          </p>
-        </div>
 
-        <span className={`px-3 py-1 rounded-full text-sm font-medium ${statusColor}`}>
-          {project.status}
-        </span>
+      <div className="mb-4">
+        <h3 className="text-lg font-semibold text-gray-800 leading-tight">{project.name}</h3>
+        <p className="text-sm text-gray-500">Client: {project.client.name}</p>
       </div>
 
       {/* Description */}
-      <p className="text-gray-600 text-sm mb-4 line-clamp-2 font-secondary">
-        {project.description}
-      </p>
+      <p className="text-gray-600 text-sm mb-4 line-clamp-2">{project.description}</p>
 
       {/* Progress */}
       <div className="mb-4">
         <div className="flex justify-between text-sm mb-1">
-          <span className="text-gray-600">Progress</span>
-          <span className="font-medium">{project.progressPercentage}%</span>
+          <span className="text-gray-500">Progress</span>
+          <span className="font-medium text-gray-700">{progress}%</span>
         </div>
-        <div className="w-full bg-gray-200 rounded-full h-2">
+
+        <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
           <div
-            className="bg-indigo-600 h-2 rounded-full"
-            style={{ width: `${project.progressPercentage}%` }}
+            className={`h-full rounded-full transition-all
+            ${hasStarted ? "bg-indigo-600" : "bg-gray-400"}`}
+            style={{ width: `${progress}%` }}
           />
         </div>
-      </div>
 
+        {!hasStarted && (
+          <p className="text-xs text-gray-400 mt-1">Progress will start after project begins</p>
+        )}
+      </div>
+      <div className="flex justify-end">
+        <span
+          className={`px-3 py-1 rounded-full text-xs font-semibold tracking-wide
+          ${getProjectStatusColor(project.status)}`}
+        >
+          {formatEnumLabel(project.status)}
+        </span>
+      </div>
       {/* Meta Info */}
       <div className="grid grid-cols-2 gap-4 text-sm mb-4">
         <div>
           <p className="text-gray-500">Health Score</p>
-          <p className={`font-semibold ${healthColor}`}>
+          <p
+            className={`font-semibold 
+            ${getProjectStatusColor(project.status, { withBg: false })}`}
+          >
             {project.healthScore}%
           </p>
         </div>
 
         <div>
-          <p className="text-gray-500">Deadline</p>
+          <p className="text-gray-500">{hasStarted ? "Deadline" : "Start Date"}</p>
           <p className="font-medium text-gray-700">
-            {project.endDate.toDateString()}
+            {hasStarted ? endDate.toDateString() : startDate.toDateString()}
           </p>
         </div>
       </div>
 
       {/* Team */}
-      <div>
-        <p className="text-gray-500 text-sm mb-1">Team Members</p>
+      <div className="mb-4">
+        <p className="text-gray-500 text-sm mb-2">Team Members</p>
         <div className="flex flex-wrap gap-2">
           {project.employees.map((member) => (
             <span
@@ -110,20 +97,26 @@ function ProjectCard() {
       </div>
 
       {/* Actions */}
-     <div className="mt-3 flex items-center justify-end gap-2  rounded-xl">
-        <button onClick={()=>setShowActivities(true)} className=" text-sm font-medium rounded-lg text-secondary  transition hover:text-primary">
-   Activities
-  </button>
-  <button className=" text-sm font-medium rounded-lg text-gray-600  hover:text-primary transition">
-   View Project
-  </button>
-</div>  
-{
-    showActivities  ? 
-    <ActivitiesDialog/>
-    :
-    null
-}
+      <div className="flex items-center justify-end gap-3 pt-3 ">
+        <button
+          onClick={() => setShowActivities(true)}
+          className="text-sm font-semibold text-indigo-600 hover:text-indigo-800 transition"
+        >
+          Activities
+        </button>
+
+        <button
+          onClick={() => setShowDetails(true)}
+          className="text-sm font-medium text-gray-600 hover:text-gray-800 transition"
+        >
+          View Project
+        </button>
+      </div>
+
+      {showActivities && <ActivitiesDialog />}
+      {showDetails ? (
+        <ProjectDetailsDialog id={project._id} onClose={() => setShowDetails(false)} />
+      ) : null}
     </div>
   );
 }

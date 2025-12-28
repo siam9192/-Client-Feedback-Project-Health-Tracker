@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import { queryCache } from "@/utils/queryCache";
 import { useState } from "react";
 
@@ -8,17 +8,14 @@ type MutateOptions<TData> = {
   invalidateKeys?: string[];
 };
 
- function useMutation<TData, TVariables>(
+function useMutation<TData, TVariables>(
   mutationFn: (variables: TVariables) => Promise<TData>,
-  baseOptions?: MutateOptions<TData>
+  baseOptions?: MutateOptions<TData>,
 ) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<any>(null);
 
-  const mutate = async (
-    variables: TVariables,
-    options?: MutateOptions<TData>
-  ) => {
+  const mutate = async (variables: TVariables, options?: MutateOptions<TData>) => {
     setIsLoading(true);
     setError(null);
 
@@ -27,9 +24,7 @@ type MutateOptions<TData> = {
 
       const finalOptions = { ...baseOptions, ...options };
 
-      finalOptions.invalidateKeys?.forEach((key) =>
-        queryCache.invalidate([key])
-      );
+      finalOptions.invalidateKeys?.forEach((key) => queryCache.invalidate([key]));
 
       finalOptions.onSuccess?.(data);
 
@@ -53,4 +48,4 @@ type MutateOptions<TData> = {
   };
 }
 
-export default useMutation
+export default useMutation;

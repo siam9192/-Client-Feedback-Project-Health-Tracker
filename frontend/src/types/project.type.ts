@@ -1,10 +1,12 @@
+import { UserRole } from "./user.type";
+
 export interface Project {
   _id: string;
   name: string;
   description: string;
 
-  startDate: string; 
-  endDate: string;   
+  startDate: string;
+  endDate: string;
 
   status: ProjectStatus;
   progressPercentage: number;
@@ -13,12 +15,32 @@ export interface Project {
   client: ProjectClient;
   employees: ProjectEmployee[];
 
+  createdAt: string;
+  updatedAt: string;
+}
 
+export type HighRiskProject = Pick<
+  Project,
+  "_id" | "name" | "client" | "status" | "progressPercentage" | "healthScore" | "client" | "endDate"
+> & { summary: HighRiskProjectSummary };
 
-  createdAt: string; 
-  updatedAt: string; 
+export type ProjectHealthGroups = {
+  status: ProjectStatus;
+  projects: Project[];
+}[];
 
- 
+export interface ProjectActivity {
+  type: ActivityType;
+  content: String;
+  metadata: Record<string, any>;
+  referenceId?: string;
+  project?: string;
+
+  performerRole: ActivityPerformerRole;
+  performedBy?: string;
+
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface ProjectClient {
@@ -27,25 +49,38 @@ export interface ProjectClient {
   profilePicture?: string;
 }
 
-
 export interface ProjectEmployee {
   _id: string;
   name: string;
   profilePicture?: string;
 }
+
 export enum ProjectStatus {
-  ON_TRACK = 'on_track',
-  AT_RISK = 'at_risk',
-  CRITICAL = 'critical',
-  COMPLETED = 'completed',
+  ON_TRACK = "on_track",
+  AT_RISK = "at_risk",
+  CRITICAL = "critical",
+  COMPLETED = "completed",
 }
 
-
-export interface RiskProjectSummary {
+export interface HighRiskProjectSummary {
   submittedEmployeeCheckins: number;
   expectedEmployeeCheckIns: number;
   missingEmployeeCheckins: number;
   submittedClientFeedbacks: number;
   openRisks: number;
   flaggedIssues: number;
+}
+
+export enum ActivityPerformerRole {
+  ADMIN = UserRole.ADMIN,
+  EMPLOYEE = UserRole.EMPLOYEE,
+  CLIENT = UserRole.CLIENT,
+  SYSTEM = "system",
+}
+
+export enum ActivityType {
+  CHECKIN = "checkin",
+  FEEDBACK = "feedback",
+  RISK = "risk",
+  STATUS_CHANGE = "status_change",
 }

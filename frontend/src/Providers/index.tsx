@@ -1,26 +1,12 @@
-'use client';
-import  { ReactNode} from 'react'
-import CurrentUserProvider from './CurrentUserProvider';
-
-
+"use client";
+import { ReactNode } from "react";
+import CurrentUserProvider from "./CurrentUserProvider";
 
 interface Props {
-    children:ReactNode
+  children: ReactNode;
 }
-function Providers({children}:Props) {
- 
-  return (
-     
-          <CurrentUserProvider>
-           
- {
-            children
-           }
-           
-           
-         </CurrentUserProvider>
-        
-          )
+function Providers({ children }: Props) {
+  return <CurrentUserProvider>{children}</CurrentUserProvider>;
 }
 
-export default Providers
+export default Providers;

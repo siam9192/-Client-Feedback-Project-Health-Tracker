@@ -1,13 +1,12 @@
 import z from "zod";
 
- const loginSchema = z.object({
-  email: z.email('Email is required'),
-  password: z.string().min(1, 'Password is required')
- });
-
+const loginSchema = z.object({
+  email: z.email("Email is required"),
+  password: z.string().min(1, "Password is required"),
+});
 
 const validators = {
- loginSchema
-}
+  loginSchema,
+};
 
-export default validators
+export default validators;

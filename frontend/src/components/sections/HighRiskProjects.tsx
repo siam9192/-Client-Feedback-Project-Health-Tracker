@@ -1,63 +1,60 @@
-interface HighRiskProject {
-  name: string;
-  projectManager: string;
-  healthScore: number; // 0-100
-  nextDeadline: string; // formatted date
-  keyIssues: string[];
-}
+"use client";
 
-const highRiskProjects: HighRiskProject[] = [
-  { 
-    name: "Project Titan", 
-    projectManager: "Siam Hasan", 
-    healthScore: 32, 
-    nextDeadline: "2025-12-28", 
-    keyIssues: ["Delayed tasks", "Resource shortage"] 
-  },
-  { 
-    name: "Project Vega", 
-    projectManager: "Sara Khan", 
-    healthScore: 28, 
-    nextDeadline: "2025-12-30", 
-    keyIssues: ["Unresolved bugs", "Missed milestones"] 
-  },
-  { 
-    name: "Project Orion", 
-    projectManager: "Rony", 
-    healthScore: 40, 
-    nextDeadline: "2026-01-05", 
-    keyIssues: ["Low team engagement"] 
-  },
-];
+import useQuery from "@/hooks/useQuery";
+import { getHighRiskProjectsWithSummary } from "@/services/api/project.api.service";
+import { HighRiskProject } from "@/types/project.type";
+import { IResponse } from "@/types/response.type";
+import HighRiskProjectCard from "../ui/HighRiskProjectCard";
+import HighRiskProjectCardSkeleton from "../ui/HighRiskProjectCardSkeleton";
+import { getTotalPages } from "@/utils/helpers";
+import Pagination from "../ui/Pagination";
+import { useState } from "react";
 
 export default function HighRiskProjects() {
+  const [page, setPage] = useState(1);
+  const { data, isLoading, refetch } = useQuery<IResponse<HighRiskProject[]>>(
+    "high-risk-projects",
+    () => getHighRiskProjectsWithSummary({ page }),
+  );
+
+  const projects = data?.data ?? [];
+  const meta = data?.meta;
+  const totalResults = meta?.totalResults ?? 0;
+  const handelPageChange = (page: number) => {
+    setPage(page);
+    refetch();
+  };
+
   return (
     <div className="bg-white shadow rounded-lg p-6 mt-6">
-      <h2 className="text-xl font-semibold text-gray-800 mb-4">
-        High-Risk Projects Summary
-      </h2>
+      <h2 className="text-xl font-semibold text-gray-800 mb-4">High-Risk Projects Summary</h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-        {highRiskProjects.map((project, idx) => (
-          <div key={idx} className="bg-red-50 border-l-4 border-red-500 rounded-lg p-4 shadow hover:shadow-md transition">
-            <h3 className="text-lg font-semibold text-red-700 mb-2">{project.name}</h3>
-            <p className="text-gray-700 mb-1"><span className="font-medium">Manager:</span> {project.projectManager}</p>
-            <p className="text-gray-700 mb-1">
-              <span className="font-medium">Health Score:</span> 
-              <span className="ml-1 font-bold text-red-600">{project.healthScore}%</span>
-            </p>
-            <p className="text-gray-700 mb-2"><span className="font-medium">Next Deadline:</span> {project.nextDeadline}</p>
-            <div>
-              <span className="font-medium text-gray-800">Key Issues:</span>
-              <ul className="list-disc list-inside text-gray-700 mt-1">
-                {project.keyIssues.map((issue, i) => (
-                  <li key={i}>{issue}</li>
-                ))}
-              </ul>
-            </div>
+      {isLoading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          {Array.from({ length: 5 }).map((_, index) => (
+            <HighRiskProjectCardSkeleton key={index} />
+          ))}
+        </div>
+      ) : totalResults === 0 ? (
+        <div className="bg-white shadow rounded-lg p-6 mt-6 text-gray-500 text-center">
+          🎉 No high-risk projects at the moment
+        </div>
+      ) : (
+        <div>
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            {projects.map((project) => (
+              <HighRiskProjectCard key={project._id} project={project} />
+            ))}
           </div>
-        ))}
-      </div>
+          {meta ? (
+            <Pagination
+              totalPages={getTotalPages(totalResults, meta.limit)}
+              page={page}
+              onPageChange={handelPageChange}
+            />
+          ) : null}
+        </div>
+      )}
     </div>
   );
 }

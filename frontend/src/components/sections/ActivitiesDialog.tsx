@@ -64,15 +64,10 @@ function ActivitiesDialog() {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
       <div className="bg-white w-full max-w-lg rounded-xl shadow-lg p-6">
-        
         {/* Header */}
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold text-gray-800">
-            Project Activities
-          </h2>
-          <button className="text-gray-400 hover:text-gray-600 text-xl">
-            ✕
-          </button>
+          <h2 className="text-xl font-semibold text-gray-800">Project Activities</h2>
+          <button className="text-gray-400 hover:text-gray-600 text-xl">✕</button>
         </div>
 
         {/* Timeline */}
@@ -80,9 +75,7 @@ function ActivitiesDialog() {
           {activityData.map((group) => (
             <div key={group.date}>
               {/* Date */}
-              <p className="text-sm font-medium text-gray-500 mb-3">
-                {group.date}
-              </p>
+              <p className="text-sm font-medium text-gray-500 mb-3">{group.date}</p>
 
               <div className="space-y-4 border-l-2 border-gray-200 pl-4">
                 {group.activities.map((activity) => (
@@ -93,12 +86,9 @@ function ActivitiesDialog() {
                     {/* Content */}
                     <div className="bg-gray-50 rounded-lg p-3">
                       <p className="text-sm text-gray-800">
-                        <span className="font-medium">{activity.user}</span>{" "}
-                        {activity.action}
+                        <span className="font-medium">{activity.user}</span> {activity.action}
                       </p>
-                      <p className="text-xs text-gray-500 mt-1">
-                        {activity.time}
-                      </p>
+                      <p className="text-xs text-gray-500 mt-1">{activity.time}</p>
                     </div>
                   </div>
                 ))}

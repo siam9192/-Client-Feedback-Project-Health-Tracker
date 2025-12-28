@@ -1,4 +1,3 @@
-
 type CacheEntry = {
   data: any;
   timestamp: number;
@@ -14,9 +13,9 @@ export const queryCache = {
     cache.set(key, { data, timestamp: Date.now() });
   },
   invalidate(key: string[]) {
-   key.forEach ((k)=> cache.delete(k))
+    key.forEach((k) => cache.delete(k));
   },
   clear() {
     cache.clear();
-  }
+  },
 };

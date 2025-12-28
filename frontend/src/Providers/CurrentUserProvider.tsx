@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import { createContext, useContext, type ReactNode } from "react";
 import type { CurrentUser } from "../types/user.type";
 import type { IResponse } from "../types/response.type";
@@ -11,7 +11,7 @@ const context = createContext<UseQueryResult<IResponse<CurrentUser>> | null>(nul
 
 function CurrentUserProvider({ children }: { children: ReactNode }) {
   // get the query result
-  const result = useQuery<IResponse<CurrentUser>>("getCurrentUser",  () =>  getCurrentUser());
+  const result = useQuery<IResponse<CurrentUser>>("getCurrentUser", () => getCurrentUser());
 
   // ✅ Pass the actual query result, not `true`
   return <context.Provider value={result}>{children}</context.Provider>;
@@ -25,4 +25,3 @@ export function useCurrentUserProvider() {
   if (!ctx) throw new Error("Wrap with CurrentUserProviderContext");
   return ctx;
 }
-

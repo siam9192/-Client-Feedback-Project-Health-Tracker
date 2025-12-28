@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
-
 // --- Zod schema ---
 const createProjectSchema = z.object({
   name: z
@@ -25,11 +24,7 @@ const createProjectSchema = z.object({
 
   clientId: z.string(),
 
-  employeeIds: z
-    .array(
-      z.string()
-    )
-    .min(1, "At least one employee must be assigned to the project"),
+  employeeIds: z.array(z.string()).min(1, "At least one employee must be assigned to the project"),
 });
 
 type CreateProjectForm = z.infer<typeof createProjectSchema>;
@@ -72,7 +67,10 @@ export default function Page() {
     <div className="mx-auto  max-w-xl">
       <h1 className="text-2xl font-semibold text-gray-800 mb-6">Add New Project</h1>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 bg-white p-6 rounded-xl shadow-md">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="space-y-5 bg-white p-6 rounded-xl shadow-md"
+      >
         {/* Project Name */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Project Name</label>
@@ -91,7 +89,9 @@ export default function Page() {
             {...register("description")}
             className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
-          {errors.description && <p className="text-red-600 text-sm mt-1">{errors.description.message}</p>}
+          {errors.description && (
+            <p className="text-red-600 text-sm mt-1">{errors.description.message}</p>
+          )}
         </div>
 
         {/* Dates */}
@@ -103,7 +103,9 @@ export default function Page() {
               {...register("startDate")}
               className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
-            {errors.startDate && <p className="text-red-600 text-sm mt-1">{errors.startDate.message}</p>}
+            {errors.startDate && (
+              <p className="text-red-600 text-sm mt-1">{errors.startDate.message}</p>
+            )}
           </div>
 
           <div>
@@ -113,7 +115,9 @@ export default function Page() {
               {...register("endDate")}
               className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
-            {errors.endDate && <p className="text-red-600 text-sm mt-1">{errors.endDate.message}</p>}
+            {errors.endDate && (
+              <p className="text-red-600 text-sm mt-1">{errors.endDate.message}</p>
+            )}
           </div>
         </div>
 
@@ -131,7 +135,9 @@ export default function Page() {
               </option>
             ))}
           </select>
-          {errors.clientId && <p className="text-red-600 text-sm mt-1">{errors.clientId.message}</p>}
+          {errors.clientId && (
+            <p className="text-red-600 text-sm mt-1">{errors.clientId.message}</p>
+          )}
         </div>
 
         {/* Employees */}
@@ -148,7 +154,9 @@ export default function Page() {
               </option>
             ))}
           </select>
-          {errors.employeeIds && <p className="text-red-600 text-sm mt-1">{errors.employeeIds.message}</p>}
+          {errors.employeeIds && (
+            <p className="text-red-600 text-sm mt-1">{errors.employeeIds.message}</p>
+          )}
         </div>
 
         {/* Submit */}
