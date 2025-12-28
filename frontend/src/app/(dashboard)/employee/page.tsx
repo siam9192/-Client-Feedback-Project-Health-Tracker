@@ -1,4 +1,5 @@
 import HighRiskProjects from "@/components/sections/HighRiskProjects";
+import PendingCheckins from "@/components/sections/PendingCheckins";
 import MissingCheckIns from "@/components/sections/ProjectsMissingCheckIns";
 import MetadataCard from "@/components/ui/MetadataCard";
 import { Metadata } from "@/types";
@@ -36,9 +37,8 @@ function Page() {
           <MetadataCard key={data.label} data={data} />
         ))}
       </div>
-
-      <MissingCheckIns />
-      <HighRiskProjects />
+<PendingCheckins/>
+    
     </div>
   );
 }

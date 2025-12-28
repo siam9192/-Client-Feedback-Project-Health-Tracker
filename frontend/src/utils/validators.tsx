@@ -26,9 +26,22 @@ const createProjectSchema = z.object({
   employeeIds: z.array(z.string()).min(1, "At least one employee must be assigned to the project"),
 });
 
+
+const createEmployeeCheckinSchema = z.object({
+  progressSummary: z.string().min(5, 'Summary must be at least 5 characters'),
+  blockers: z.string().optional(),
+  confidenceLevel:  z.int().min(1, { message: "Confidence level must be between 1 and 5" })
+  .max(5, { message: "Confidence level must be between 1 and 5" }),
+  completePercentage: z.number().min(1, { message: "Completion percentage must be between 1 and 100" })
+  .max(100, { message: "Completion percentage must be between 1 and 100" }),
+  projectId: z.string().nonempty('Project ID is required')
+});
+
+
 const validators = {
   loginSchema,
   createProjectSchema,
+  createEmployeeCheckinSchema
 };
 
 export default validators;
