@@ -38,6 +38,13 @@ export default function AddProjectEmployeeDialog({
     refetch();
   }, [searchTerm]);
 
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
       <div className="bg-white w-full max-w-md rounded-2xl p-6 relative">

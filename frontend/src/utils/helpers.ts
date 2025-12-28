@@ -94,3 +94,21 @@ export function getRiskStatusColor(
 
   return `${options.withBg ? bg : ""} ${options.withText ? text : ""}`.trim();
 }
+
+export function formatTimelineDate(dateStr: string) {
+  const date = new Date(dateStr);
+  const today = new Date();
+
+  const isToday =
+    date.getDate() === today.getDate() &&
+    date.getMonth() === today.getMonth() &&
+    date.getFullYear() === today.getFullYear();
+
+  return isToday
+    ? "Today"
+    : date.toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+}

@@ -45,20 +45,19 @@ export default function AddProjectPage() {
     setEmployees((prev) => prev.filter((e) => e._id !== id));
   };
 
-  const {mutate,isLoading} = useMutation(createProject)
+  const { mutate, isLoading } = useMutation(createProject);
 
   const onSubmit = async (data: CreateProjectForm) => {
-   mutate(data,{
-    onSuccess:()=>{
-      toast.success("Project added successfully"),
-      reset()
-      setClient(null)
-      setEmployees([])
-    },
-    onError:(err)=>{
-      toast.error(err.message)
-    }
-   })
+    mutate(data, {
+      onSuccess: () => {
+        (toast.success("Project added successfully"), reset());
+        setClient(null);
+        setEmployees([]);
+      },
+      onError: (err) => {
+        toast.error(err.message);
+      },
+    });
   };
 
   useEffect(() => {
@@ -68,7 +67,7 @@ export default function AddProjectPage() {
   }, [client, employees]);
   return (
     <div className="mx-auto max-w-4xl ">
-      <PageHeading title="Add New Project"/>
+      <PageHeading title="Add New Project" />
 
       <form
         onSubmit={handleSubmit(onSubmit)}
@@ -219,7 +218,7 @@ export default function AddProjectPage() {
         <div className="flex justify-end mt-4">
           <button
             type="submit"
-            disabled={isSubmitting||isLoading}
+            disabled={isSubmitting || isLoading}
             className="px-6 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSubmitting ? "Creating..." : "Create Project"}

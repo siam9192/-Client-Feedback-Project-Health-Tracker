@@ -1,23 +1,30 @@
 "use client";
 
+import { useCurrentUserProvider } from "@/providers/CurrentUserProvider";
 import Container from "./Container";
+import { DEFAULT_PROFILE_PICTURE } from "@/utils/constant";
+import { formatEnumLabel } from "@/utils/helpers";
 
-export default function Header() {
+ function Header() {
+  const {data} = useCurrentUserProvider()
+  const user = data?.data
+
   return (
-    <header className="p-0 md:p-3 w-full bg-white sticky top-0  z-40">
+    <header className="p-0 md:p-3 w-full bg-white sticky top-0  z-40 border-b border-gray-300 lg:border-0">
       <Container>
         <div className="flex justify-between items-center">
-          <h1 className="text-sm md:text-xl font-semibold ">Welcome,Rony</h1>
+          <h1 className="text-sm md:text-xl font-semibold ">Welcome, <span className="text-primary">{user?.profile.name.split(" ")[0]}({formatEnumLabel(user?.role??"")})</span></h1>
           <div className="flex gap-2 items-center   rounded-full font-semibold">
             <img
               className="size-10 rounded-full object-cover"
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuNhTZJTtkR6b-ADMhmzPvVwaLuLdz273wvQ&s"
+              src={user?.profile.profilePicture??DEFAULT_PROFILE_PICTURE}
               alt=""
             />
-            <p className="hidden md:block">Arafat Hasan</p>
+            <p className="hidden md:block">{user?.profile.name}</p>
           </div>
         </div>
       </Container>
     </header>
   );
 }
+export default Header

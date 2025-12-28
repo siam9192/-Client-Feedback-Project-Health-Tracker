@@ -1,5 +1,6 @@
 "use server";
 import { Params } from "@/types";
+import { ActivityTimeline } from "@/types/activity.type";
 import {
   CreateProjectPayload,
   HighRiskProject,
@@ -86,6 +87,24 @@ export async function getProjectRisks(id: string, params: Params) {
 export async function createProject(payload: CreateProjectPayload) {
   try {
     const res = await axiosInstance.post<IResponse<Project>>(`/projects`, payload);
+    return res.data;
+  } catch (err) {
+    const error = err as AxiosError<{ message?: string }>;
+
+    const message = error.response?.data?.message || error.message || "Something went wrong";
+
+    throw new Error(message);
+  }
+}
+
+export async function getProjectActivityTimelines(id: string, params: Params) {
+  try {
+    const res = await axiosInstance.get<IResponse<ActivityTimeline[]>>(
+      `/projects/${id}/activity-timelines`,
+      {
+        params,
+      },
+    );
     return res.data;
   } catch (err) {
     const error = err as AxiosError<{ message?: string }>;

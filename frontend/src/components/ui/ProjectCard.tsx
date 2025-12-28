@@ -113,7 +113,9 @@ function ProjectCard({ project }: ProjectCardProps) {
         </button>
       </div>
 
-      {showActivities && <ActivitiesDialog />}
+      {showActivities && (
+        <ActivitiesDialog id={project._id} onClose={() => setShowActivities(false)} />
+      )}
       {showDetails ? (
         <ProjectDetailsDialog id={project._id} onClose={() => setShowDetails(false)} />
       ) : null}

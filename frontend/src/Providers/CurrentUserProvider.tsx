@@ -6,14 +6,12 @@ import type { UseQueryResult } from "@/hooks/useQuery";
 import useQuery from "@/hooks/useQuery";
 import { getCurrentUser } from "@/services/api/user.api.service";
 
-// ✅ Correct type for context
 const context = createContext<UseQueryResult<IResponse<CurrentUser>> | null>(null);
 
 function CurrentUserProvider({ children }: { children: ReactNode }) {
-  // get the query result
+  
   const result = useQuery<IResponse<CurrentUser>>("getCurrentUser", () => getCurrentUser());
-
-  // ✅ Pass the actual query result, not `true`
+ 
   return <context.Provider value={result}>{children}</context.Provider>;
 }
 

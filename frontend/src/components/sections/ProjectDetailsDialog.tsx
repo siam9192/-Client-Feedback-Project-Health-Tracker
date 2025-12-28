@@ -2,8 +2,9 @@ import useQuery from "@/hooks/useQuery";
 import { getProjectById } from "@/services/api/project.api.service";
 import { Project } from "@/types/project.type";
 import { IResponse } from "@/types/response.type";
+import { DEFAULT_PROFILE_PICTURE } from "@/utils/constant";
 import { formatEnumLabel, getProjectStatusColor } from "@/utils/helpers";
-import { X } from "lucide-react";
+import { useEffect } from "react";
 
 interface Props {
   id: string;
@@ -18,6 +19,13 @@ export default function ProjectDetailsDialog({ id, onClose }: Props) {
   const project = data?.data;
 
   const stopPropagation = (e: React.MouseEvent) => e.stopPropagation();
+
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
 
   if (isLoading) {
     return (
@@ -129,11 +137,11 @@ export default function ProjectDetailsDialog({ id, onClose }: Props) {
 
             <div className="flex flex-wrap gap-4">
               {/* Client */}
-              <TeamAvatar name={project.client.name} role="Client" highlight />
+              <TeamAvatar name={project.client.name} picture={project.client.profilePicture} role="Client" highlight />
 
               {/* Employees */}
               {project.employees.map((emp) => (
-                <TeamAvatar key={emp._id} name={emp.name} role="Member" />
+                <TeamAvatar key={emp._id} name={emp.name} picture={emp.profilePicture} role="Employee" />
               ))}
             </div>
           </div>
@@ -154,17 +162,20 @@ export default function ProjectDetailsDialog({ id, onClose }: Props) {
 
 function TeamAvatar({
   name,
+  picture,
   role,
   highlight,
 }: {
   name: string;
+  picture?:string
   role: string;
   highlight?: boolean;
+  
 }) {
   return (
     <div className="flex flex-col items-center gap-1">
       <img
-        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuNhTZJTtkR6b-ADMhmzPvVwaLuLdz273wvQ&s"
+        src={picture??DEFAULT_PROFILE_PICTURE}
         className={`size-10 rounded-full ring-2 ${highlight ? "ring-indigo-500" : "ring-gray-300"}`}
         alt=""
       />
