@@ -60,7 +60,7 @@ function useQuery<T>(key: string, queryFn: () => Promise<T>, options: UseQueryOp
   // trigger fetch on mount or enabled toggle
   const [toggleRefetch, setToggleRefetch] = useState(true);
   useEffect(() => {
-    console.log(key, enabled);
+  
     if (!enabled) return;
     fetchData();
   }, [enabled, toggleRefetch]);

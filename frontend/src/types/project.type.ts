@@ -1,4 +1,6 @@
+import z from "zod";
 import { UserRole } from "./user.type";
+import validators from "@/utils/validators";
 
 export interface Project {
   _id: string;
@@ -54,6 +56,8 @@ export interface ProjectEmployee {
   name: string;
   profilePicture?: string;
 }
+
+export type CreateProjectPayload = z.infer<typeof validators.createProjectSchema>;
 
 export enum ProjectStatus {
   ON_TRACK = "on_track",

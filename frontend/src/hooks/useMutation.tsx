@@ -35,7 +35,7 @@ function useMutation<TData, TVariables>(
       const finalOptions = { ...baseOptions, ...options };
       finalOptions.onError?.(err);
 
-      throw err;
+     
     } finally {
       setIsLoading(false);
     }

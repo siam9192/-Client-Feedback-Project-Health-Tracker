@@ -5,14 +5,13 @@ interface Props {
   risk: ProjectRisk;
 }
 function RiskCard({ risk }: Props) {
-  const createdAt =  new Date(risk.createdAt)
+  const createdAt = new Date(risk.createdAt);
   return (
     <div className="group relative rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition hover:shadow-lg">
-    
       <span
-        className={`absolute left-0 top-0 h-full w-1 rounded-l-2xl ${
-        getRiskSeverityColor(risk.severity)
-        }`}
+        className={`absolute left-0 top-0 h-full w-1 rounded-l-2xl ${getRiskSeverityColor(
+          risk.severity,
+        )}`}
       />
 
       {/* Header */}
@@ -52,7 +51,10 @@ function RiskCard({ risk }: Props) {
       {/* Footer */}
       <div className="mt-5 flex items-center justify-between text-xs text-gray-500">
         <span>
-          Created on <span className="font-medium text-gray-700">{createdAt.toLocaleDateString()},{createdAt.toLocaleTimeString()}</span>
+          Created on{" "}
+          <span className="font-medium text-gray-700">
+            {createdAt.toLocaleDateString()},{createdAt.toLocaleTimeString()}
+          </span>
         </span>
 
         {risk.resolvedAt ? (

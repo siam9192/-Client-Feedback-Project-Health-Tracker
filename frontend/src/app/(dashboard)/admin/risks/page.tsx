@@ -13,9 +13,8 @@ import { getTotalPages } from "@/utils/helpers";
 export default function ProjectRisksPage() {
   const [page, setPage] = useState(1);
 
-  const { data, isLoading, refetch } = useQuery<IResponse<ProjectRisk[]>>(
-    ["risks", page],
-    () => getRisks({ page })
+  const { data, isLoading, refetch } = useQuery<IResponse<ProjectRisk[]>>("risks", () =>
+    getRisks({ page }),
   );
 
   const risks = data?.data ?? [];
@@ -31,17 +30,13 @@ export default function ProjectRisksPage() {
       {/* Page Heading */}
       <div>
         <h1 className="text-2xl font-semibold text-gray-800">Project Risks</h1>
-        <p className="text-sm text-gray-500">
-          Track, assess, and mitigate project risks
-        </p>
+        <p className="text-sm text-gray-500">Track, assess, and mitigate project risks</p>
       </div>
 
       {/* Risks List */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 min-h-[200px]">
         {isLoading ? (
-          Array.from({ length: 10 }).map((_, index) => (
-            <RiskCardSkeleton key={index} />
-          ))
+          Array.from({ length: 10 }).map((_, index) => <RiskCardSkeleton key={index} />)
         ) : risks.length > 0 ? (
           risks.map((risk) => <RiskCard key={risk._id} risk={risk} />)
         ) : (
