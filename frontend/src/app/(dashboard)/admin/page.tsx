@@ -4,7 +4,7 @@ import MetadataCard from "@/components/ui/MetadataCard";
 import { Metadata } from "@/types";
 import { Users, CheckSquare, AlertCircle, Folder } from "lucide-react";
 
-function Page() {
+function page() {
   const metadata: Metadata[] = [
     {
       label: "Total Users",
@@ -43,4 +43,4 @@ function Page() {
   );
 }
 
-export default Page;
+export default page;

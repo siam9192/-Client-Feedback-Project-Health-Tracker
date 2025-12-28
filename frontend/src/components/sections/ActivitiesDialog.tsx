@@ -4,7 +4,7 @@ import useQuery from "@/hooks/useQuery";
 import { getProjectActivityTimelines } from "@/services/api/project.api.service";
 import { ActivityTimeline } from "@/types/activity.type";
 import { IResponse } from "@/types/response.type";
-import { formatTimelineDate } from "@/utils/helpers";
+import { formatTimelineDate, getTotalPages } from "@/utils/helpers";
 import { X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
@@ -37,7 +37,7 @@ function ActivitiesDialog({ id, onClose }: Props) {
 
     const isBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 20;
 
-    if (isBottom && page < Math.ceil(meta.totalResults / meta.limit)) {
+    if (isBottom && page < getTotalPages(meta.totalResults,meta.limit)) {
       setPage((p) => p + 1);
     }
   };
@@ -48,6 +48,7 @@ function ActivitiesDialog({ id, onClose }: Props) {
       document.body.style.overflow = "";
     };
   }, []);
+  
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
       <div className="bg-white w-full max-w-lg rounded-2xl shadow-xl p-6 relative">
@@ -60,7 +61,7 @@ function ActivitiesDialog({ id, onClose }: Props) {
         </div>
 
         {/* Empty */}
-        {!isLoading && timelines.length === 0 && (
+        {!isLoading && meta?.totalResults === 0 && (
           <p className="text-center text-gray-400 py-10">No activities found.</p>
         )}
 
@@ -68,7 +69,7 @@ function ActivitiesDialog({ id, onClose }: Props) {
         <div
           ref={containerRef}
           onScroll={handleScroll}
-          className="space-y-6 max-h-[420px] overflow-y-auto pr-2"
+          className="space-y-6 max-h-[420px] overflow-y-auto pr-2 font-secondary"
         >
           {timelines.map((group, index) => (
             <div key={index}>

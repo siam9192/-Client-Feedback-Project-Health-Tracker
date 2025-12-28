@@ -31,6 +31,11 @@ export type ProjectHealthGroups = {
   projects: Project[];
 }[];
 
+export interface AssignedProject extends Project {
+  checkinPending:boolean
+  feedbackPending:boolean
+} 
+
 export interface ProjectActivity {
   type: ActivityType;
   content: String;

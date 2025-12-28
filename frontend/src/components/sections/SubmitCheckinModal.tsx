@@ -51,7 +51,7 @@ export default function SubmitCheckinModal({ projectId,progress }: Props) {
  
   return (
    <React.Fragment>
-      <button onClick={()=>setOpen(true)} className='px-4 py-2  text-primary hover:text-secondary font-semibold text-xs md:text-sm '>Checkin</button>
+      <button onClick={()=>setOpen(true)} className='px-4 py-2  text-primary hover:text-secondary font-semibold text-sm '>Checkin</button>
     {
         open ?
            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-2">

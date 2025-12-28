@@ -2,6 +2,7 @@
 import { Params } from "@/types";
 import { ActivityTimeline } from "@/types/activity.type";
 import {
+  AssignedProject,
   CreateProjectPayload,
   HighRiskProject,
   Project,
@@ -68,6 +69,24 @@ export async function getProjectHealthGroups() {
     throw new Error(message);
   }
 }
+
+
+export async function getAssignedProjects(params: Params) {
+  try {
+    const res = await axiosInstance.get<IResponse<AssignedProject[]>>("/projects/assigned", {
+      params,
+    });
+
+    return res.data;
+  } catch (err) {
+    const error = err as AxiosError<{ message?: string }>;
+
+    const message = error.response?.data?.message || error.message || "Something went wrong";
+
+    throw new Error(message);
+  }
+}
+
 
 export async function getProjectRisks(id: string, params: Params) {
   try {
