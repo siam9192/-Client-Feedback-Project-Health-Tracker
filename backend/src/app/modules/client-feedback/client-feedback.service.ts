@@ -1,6 +1,10 @@
 import AppError from '../../errors/AppError';
 import { calculatePagination } from '../../helpers/pagination.helper';
-import { getCurrentWeek, hasStarted, objectId } from '../../helpers/utils.helper';
+import {
+  getCurrentWeek,
+  hasStarted,
+  objectId,
+} from '../../helpers/utils.helper';
 import { PaginationOptions } from '../../types';
 import httpStatus from '../../utils/http-status';
 import {
@@ -19,13 +23,12 @@ class ClientFeedbackService {
     authUser: AuthUser,
     payload: CreateClientFeedbackPayload,
   ) {
-    console.log(payload)
     // Validate payload
     payload = clientFeedbackValidations.createFeedbackSchema.parse(payload);
 
     //Fetch project
     const project = await ProjectModel.findById(payload.projectId).select(
-      '_id client',
+      '_id client startDate',
     );
 
     //Check project existence
@@ -36,10 +39,8 @@ class ClientFeedbackService {
         "You can't submit feedback in this project ",
       );
 
-      if(!hasStarted(project.startDate)) throw new AppError(
-        httpStatus.FORBIDDEN,
-        "This Project not started yet",
-      );
+    if (!hasStarted(project.startDate))
+      throw new AppError(httpStatus.FORBIDDEN, 'This Project not started yet');
     const { week, year } = getCurrentWeek();
 
     // Check this week  feedback submission status
@@ -56,14 +57,14 @@ class ClientFeedbackService {
         ' Feedback already submitted  for this week',
       );
 
-    const { issueDescription,projectId ,...others } = payload;
+    const { issueDescription, projectId, ...others } = payload;
 
     // Arrange create data
     const data = {
       ...others,
-      project:objectId(projectId),
+      project: objectId(projectId),
       client: objectId(authUser.profileId),
-      ...(issueDescription ? {issue:{ description: issueDescription }} : {}),
+      ...(issueDescription ? { issue: { description: issueDescription } } : {}),
       issueFlagged: !!issueDescription,
       week: week,
       year,
@@ -89,10 +90,17 @@ class ClientFeedbackService {
     });
   }
 
-  async getCurrentUserLatestFeedback(auth: AuthUser) {
+  async getLatestFeedback(auth: AuthUser) {
     return await ClientFeedbackModel.findOne({
       client: objectId(auth.profileId),
-    }).sort({ createdAt: -1 });
+    })
+      .populate([
+        {
+          path: 'project',
+          select: '_id name status',
+        },
+      ])
+      .sort({ createdAt: -1 });
   }
 
   async getFeedbacksByProjectId(

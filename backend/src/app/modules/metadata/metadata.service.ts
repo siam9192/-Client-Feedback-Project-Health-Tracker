@@ -160,11 +160,10 @@ class MetadataService {
     const currentHealthStatus = getProjectHealthStatus(
       avrHealth.length > 0 ? avrHealth[0].averageHealth : 0,
     );
-    
 
     return {
       assignedProjects,
-      activeProjects:activeProjects.length,
+      activeProjects: activeProjects.length,
       currentHealthStatus,
       pendingWeeklyFeedbacks,
     };

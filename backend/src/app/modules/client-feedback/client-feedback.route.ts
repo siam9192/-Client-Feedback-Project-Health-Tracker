@@ -13,7 +13,7 @@ router.post(
 router.get(
   '/latest',
   auth(UserRole.CLIENT),
-  clientFeedbackController.getCurrentUserLatestFeedback,
+  clientFeedbackController.getLatestFeedback,
 );
 
 const clientFeedbackRouter = router;

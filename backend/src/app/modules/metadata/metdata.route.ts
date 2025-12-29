@@ -7,7 +7,7 @@ const router = Router();
 router.get(
   '/dashboard-summary',
   auth(),
-  metadataController.getDashboardSummary
+  metadataController.getDashboardSummary,
 );
 
 const metadataRouter = router;

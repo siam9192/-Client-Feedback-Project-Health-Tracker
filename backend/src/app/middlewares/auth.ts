@@ -11,7 +11,6 @@ import { UserRole, UserStatus } from '../modules/user/user.interface';
 
 function auth(...roles: UserRole[]) {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  
     const token1 = req.cookies?.accessToken?.replace('Bearer ', '');
     const token2 = req.headers.authorization?.replace('Bearer ', '');
 

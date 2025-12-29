@@ -149,7 +149,6 @@ class UserService {
     filterQuery: UsersFilterQuery,
     paginationOptions: PaginationOptions,
   ) {
-    
     const { searchTerm, notIn, select, ...others } = filterQuery;
     const { page, skip, limit, sortBy, sortOrder } =
       calculatePagination(paginationOptions);

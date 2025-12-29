@@ -17,10 +17,8 @@ class ProjectRiskController {
     });
   });
 
-  getCurrentUserLatestFeedback = catchAsync(async (req, res) => {
-    const result = await employeeCheckInService.getCurrentUserLatestFeedback(
-      req.user,
-    );
+  getLatestFeedback = catchAsync(async (req, res) => {
+    const result = await employeeCheckInService.getLatestFeedback(req.user);
     sendSuccessResponse(res, {
       message: 'Latest feedback retrieved successfully',
       statusCode: httpStatus.OK,

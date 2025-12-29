@@ -66,7 +66,7 @@ export function getWeeksBetweenDates(
   return weeks;
 }
 
-export  function getProjectHealthStatus(score: number) {
+export function getProjectHealthStatus(score: number) {
   return score < 60
     ? ProjectStatus.CRITICAL
     : score < 80
@@ -74,7 +74,6 @@ export  function getProjectHealthStatus(score: number) {
       : ProjectStatus.ON_TRACK;
 }
 
-
-export function hasStarted (startDate:Date) {
-  return new Date(startDate).getTime() <= Date.now()
+export function hasStarted(startDate: Date) {
+  return new Date(startDate).getTime() <= Date.now();
 }
