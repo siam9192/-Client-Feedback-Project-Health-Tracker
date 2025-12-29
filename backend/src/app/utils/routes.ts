@@ -5,6 +5,7 @@ import projectRouter from '../modules/project/project.route';
 import employeeCheckInRouter from '../modules/employee-checkIn/employee-checkIn.route';
 import clientFeedbackRouter from '../modules/client-feedback/client-feedback.route';
 import projectRiskRouter from '../modules/project-risk/project-risk.route';
+import metadataRouter from '../modules/metadata/metdata.route';
 
 type TModuleRoutes = { path: string; router: IRouter }[];
 const router = Router();
@@ -15,6 +16,7 @@ const moduleRoutes: TModuleRoutes = [
   { path: '/employee-checkins', router: employeeCheckInRouter },
   { path: '/client-feedback', router: clientFeedbackRouter },
   { path: '/project-risks', router: projectRiskRouter },
+  { path: '/metadata', router: metadataRouter },
 ];
 
 const routes = moduleRoutes.map((route) =>

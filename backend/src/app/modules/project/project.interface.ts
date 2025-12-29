@@ -11,20 +11,13 @@ export interface Project extends Document {
   status: ProjectStatus;
   progressPercentage: number;
   healthScore: number;
-  lastCheckIn: LastCheckIn;
+  lastCheckInAt?: Date;
   createdAt: Date;
   updatedAt: Date;
 
   client: Types.ObjectId | Client;
   employees: Types.ObjectId[];
 }
-
-type LastCheckIn = {
-  date: Date;
-  week: number;
-  year: number;
-};
-
 export enum ProjectStatus {
   ON_TRACK = 'on_track',
   AT_RISK = 'at_risk',

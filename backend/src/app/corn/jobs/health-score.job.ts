@@ -17,6 +17,9 @@ export const healthScoreJob = cron.schedule('*/30 * * * *', async () => {
           ProjectStatus.CRITICAL,
         ],
       },
+      startDate: {
+        $lte: new Date(),
+      },
     }).select('_id');
 
     await Promise.all(

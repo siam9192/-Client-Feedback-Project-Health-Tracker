@@ -131,7 +131,6 @@ class ActivityService {
       // Final Pagination and Sorting
       {
         $facet: {
-          metadata: [{ $count: 'total' }],
           data: [
             { $sort: { _id: -1 } },
             { $skip: skip },
@@ -144,11 +143,13 @@ class ActivityService {
               },
             },
           ],
+          metadata: [{ $count: 'total' }],
         },
       },
     ]);
     const data = result[0]?.data || [];
-    const totalResults = result[0]?.metadata?.count || 0;
+    const totalResults = result[0]?.metadata[0]?.total || 0;
+
     return {
       data,
       meta: {

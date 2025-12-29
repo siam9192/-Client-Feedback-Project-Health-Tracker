@@ -12,6 +12,7 @@ import projectValidations from './project.validation';
 
 import { ProjectModel } from './project.model';
 import {
+  getCurrentWeek,
   getRecentWeeks,
   getWeeksBetweenDates,
   objectId,
@@ -19,7 +20,6 @@ import {
 import { PaginationOptions } from '../../types';
 import { calculatePagination } from '../../helpers/pagination.helper';
 import { AuthUser } from '../auth/auth.interface';
-import { Types } from 'mongoose';
 import { ClientFeedbackModel } from '../client-feedback/client-feedback.model';
 import { EmployeeCheckInModel } from '../employee-checkIn/employee-checkIn.model';
 import { ProjectRiskModel } from '../project-risk/project-risk.model';
@@ -225,7 +225,6 @@ class ProjectService {
     await project.save();
     return finalScore;
   }
-
   async getAssignedProjects(
     authUser: AuthUser,
     filterQuery: ProjectsFilterQuery,
@@ -233,47 +232,83 @@ class ProjectService {
   ) {
     const { page, skip, limit, sortBy, sortOrder } =
       calculatePagination(paginationOptions);
-    const { searchTerm, ...others } = filterQuery;
 
-    const whereConditions: any = {};
+    const { searchTerm, ...filters } = filterQuery;
 
+    const whereConditions: Record<string, any> = {};
+
+    // Role-based assignment
     if (authUser.role === UserRole.CLIENT) {
-      whereConditions.clientId = authUser.profileId;
+      whereConditions.client = authUser.profileId;
     } else {
-      whereConditions['employees'] = authUser.profileId;
+      whereConditions.employees = authUser.profileId;
     }
 
-    //  Add searchTerm on existence
+    // Search
     if (searchTerm?.trim()) {
-      whereConditions.title = { $regex: searchTerm, $options: 'i' };
+      whereConditions.name = { $regex: searchTerm, $options: 'i' };
     }
 
     // Other filters
-    Object.entries(others).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) whereConditions[key] = value;
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value != null) whereConditions[key] = value;
     });
 
     const projects = await ProjectModel.find(whereConditions)
-      .sort({
-        [sortBy]: sortOrder,
-      })
+      .sort({ [sortBy]: sortOrder })
       .skip(skip)
       .limit(limit)
       .populate([
-        {
-          path: 'client',
-          select: 'name profilePicture',
-        },
-        { path: 'employees.employee', select: 'name profilePicture' },
+        { path: 'client', select: '_id name profilePicture' },
+        { path: 'employees', select: '_id name profilePicture' },
       ])
       .lean()
       .exec();
 
-    const totalResults =
-      await ProjectModel.countDocuments(whereConditions).exec();
+    const { week, year } = getCurrentWeek();
+    const now = Date.now();
+    const isEmployee = authUser.role === UserRole.EMPLOYEE;
+
+    // Started projects only
+    const startedProjectIds = projects
+      .filter((p) => new Date(p.startDate).getTime() <= now)
+      .map((p) => p._id);
+
+    // Fetch submissions (check-ins or feedbacks)
+    const submissions = isEmployee
+      ? await EmployeeCheckInModel.find({
+          project: { $in: startedProjectIds },
+          employee: objectId(authUser.profileId),
+          week,
+          year,
+        }).select('project')
+      : await ClientFeedbackModel.find({
+          project: { $in: startedProjectIds },
+          client: objectId(authUser.profileId),
+          week,
+          year,
+        }).select('project');
+
+    const submittedProjectIdSet = new Set(
+      submissions.map((s) => s.project.toString()),
+    );
+
+    // Attach pending flags
+    const data = projects.map((project) => {
+      const isPending = !submittedProjectIdSet.has(project._id.toString());
+
+      return {
+        ...project,
+        ...(isEmployee
+          ? { checkinPending: isPending }
+          : { feedbackPending: isPending }),
+      };
+    });
+
+    const totalResults = await ProjectModel.countDocuments(whereConditions);
 
     return {
-      data: projects,
+      data,
       meta: {
         page,
         limit,
@@ -283,13 +318,23 @@ class ProjectService {
   }
 
   async getAllGroupProjectsByHealthStatus() {
-    //  Aggregate projects grouped by status
+    //  Group active projects by status
     const groups = await ProjectModel.aggregate([
       {
         $match: {
-          status: {
-            $ne: ProjectStatus.COMPLETED,
-          },
+          status: { $ne: ProjectStatus.COMPLETED },
+        },
+      },
+      {
+        $project: {
+          name: 1,
+          status: 1,
+          client: 1,
+          employees: 1,
+          startDate: 1,
+          endDate: 1,
+          healthStatus: 1,
+          progressPercentage: 1,
         },
       },
       {
@@ -298,57 +343,51 @@ class ProjectService {
           projects: { $push: '$$ROOT' },
         },
       },
-    ]).exec();
+    ]);
 
-    //  Collect unique client and employee IDs
+    //  Collect unique client & employee IDs
     const clientIds = new Set<string>();
     const employeeIds = new Set<string>();
 
-    groups.forEach((group) => {
-      group.projects.forEach((project: Project) => {
+    groups.forEach(({ projects }) => {
+      projects.forEach((project: Project) => {
         if (project.client) clientIds.add(project.client.toString());
-        project.employees?.forEach((empId) =>
-          employeeIds.add(empId.toString()),
-        );
+        project.employees?.forEach((id) => employeeIds.add(id.toString()));
       });
     });
 
-    // Fetch clients and employees
-    const clients = await ClientModel.find({
-      _id: { $in: [...clientIds].map((id) => new Types.ObjectId(id)) },
-    })
-      .select('_id name profilePicture')
-      .lean()
-      .exec();
+    //  Fetch related users in parallel
+    const [clients, employees] = await Promise.all([
+      ClientModel.find({ _id: { $in: [...clientIds] } })
+        .select('_id name profilePicture')
+        .lean(),
+      EmployeeModel.find({ _id: { $in: [...employeeIds] } })
+        .select('_id name profilePicture')
+        .lean(),
+    ]);
 
-    const employees = await EmployeeModel.find({
-      _id: { $in: [...employeeIds].map((id) => new Types.ObjectId(id)) },
-    })
-      .select('_id name profilePicture')
-      .lean()
-      .exec();
+    //  Build lookup maps
+    const clientMap = new Map(
+      clients.map((client) => [client._id.toString(), client]),
+    );
 
-    //  Convert arrays
-    const clientMap = new Map(clients.map((c) => [c._id.toString(), c]));
-    const employeeMap = new Map(employees.map((e) => [e._id.toString(), e]));
+    const employeeMap = new Map(
+      employees.map((emp) => [emp._id.toString(), emp]),
+    );
 
-    // Populate client & employees
-    const result = groups.map((group) => {
-      const projects = group.projects.map((project: Project) => ({
+    return groups.map(({ _id: status, projects }) => ({
+      status,
+      projects: projects.map((project: Project) => ({
         ...project,
-        client: clientMap.get(project.client?.toString() || '') || null,
-        employees: project.employees
-          ?.map((empId) => employeeMap.get(empId.toString()))
-          .filter(Boolean),
-      }));
-
-      return {
-        status: group._id,
-        projects,
-      };
-    });
-
-    return result;
+        client: project.client
+          ? clientMap.get(project.client.toString()) || null
+          : null,
+        employees:
+          project.employees
+            ?.map((id) => employeeMap.get(id.toString()))
+            .filter(Boolean) ?? [],
+      })),
+    }));
   }
 
   async getProjectById(authUser: AuthUser, id: string) {
@@ -390,6 +429,7 @@ class ProjectService {
     // Return project as result
     return project;
   }
+
   async getHighRiskProjectsWithSummary(paginationOptions: PaginationOptions) {
     const { page, limit, skip } = calculatePagination(paginationOptions);
     const highRiskThreshold = 60;
@@ -466,20 +506,29 @@ class ProjectService {
 
   async getRecentCheckinMissingProjects(paginationOptions: PaginationOptions) {
     const { page, limit, skip } = calculatePagination(paginationOptions);
+    const today = new Date();
+    const recentDate = new Date(today.toDateString());
 
-    const recentWeeks = getRecentWeeks(2);
+    recentDate.setDate(recentDate.getDate() - 14);
 
-    //  const whereConditions = {
-    //   $or:recentWeeks.map(week=>({
-    //     $and:[
-    //       {
-    //         "lastCheckIn.week":{$ne:week.week},
-    //         "lastCheckIn.year":{$ne:week.year}
-    //       }
-    //     ]
-    //   }))
-    // }
-    const data = await ProjectModel.find()
+    const whereConditions = {
+      startDate: {
+        $lte: today,
+      },
+      $or: [
+        {
+          lastCheckInAt: {
+            $exists: false,
+          },
+        },
+        {
+          lastCheckInAt: {
+            $lte: recentDate,
+          },
+        },
+      ],
+    };
+    const data = await ProjectModel.find(whereConditions)
       .populate([
         {
           path: 'client',
@@ -493,7 +542,7 @@ class ProjectService {
       .skip(skip)
       .limit(limit);
 
-    const totalResults = await ProjectModel.countDocuments();
+    const totalResults = await ProjectModel.countDocuments(whereConditions);
 
     return {
       data,

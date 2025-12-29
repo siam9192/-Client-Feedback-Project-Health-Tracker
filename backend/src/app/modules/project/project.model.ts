@@ -34,17 +34,7 @@ const ProjectModelSchema = new Schema<Project>(
         'At least one employee is required',
       ],
     },
-    lastCheckIn: {
-      date: {
-        type: Date,
-      },
-      week: {
-        type: Number,
-      },
-      year: {
-        type: Number,
-      },
-    },
+    lastCheckInAt: Date,
   },
   { timestamps: true },
 );

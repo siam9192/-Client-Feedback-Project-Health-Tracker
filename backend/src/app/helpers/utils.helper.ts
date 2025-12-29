@@ -1,4 +1,5 @@
 import { Types } from 'mongoose';
+import { ProjectStatus } from '../modules/project/project.interface';
 
 interface WeekInfo {
   year: number;
@@ -63,4 +64,12 @@ export function getWeeksBetweenDates(
   }
 
   return weeks;
+}
+
+export  function getProjectHealthStatus(score: number) {
+  return score < 60
+    ? ProjectStatus.CRITICAL
+    : score < 80
+      ? ProjectStatus.AT_RISK
+      : ProjectStatus.ON_TRACK;
 }
