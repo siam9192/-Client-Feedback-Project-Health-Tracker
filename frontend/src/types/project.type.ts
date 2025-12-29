@@ -16,7 +16,7 @@ export interface Project {
 
   client: ProjectClient;
   employees: ProjectEmployee[];
-
+  lastCheckInAt?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -32,9 +32,9 @@ export type ProjectHealthGroups = {
 }[];
 
 export interface AssignedProject extends Project {
-  checkinPending:boolean
-  feedbackPending:boolean
-} 
+  checkinPending: boolean;
+  feedbackPending: boolean;
+}
 
 export interface ProjectActivity {
   type: ActivityType;

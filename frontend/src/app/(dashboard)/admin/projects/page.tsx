@@ -19,7 +19,8 @@ function Page() {
   const onTrackProjects = groups.find((g) => g.status === ProjectStatus.ON_TRACK)?.projects ?? [];
   const atRiskProjects = groups.find((g) => g.status === ProjectStatus.AT_RISK)?.projects ?? [];
   const criticalProjects = groups.find((g) => g.status === ProjectStatus.CRITICAL)?.projects ?? [];
-
+  const completedProjects =
+    groups.find((g) => g.status === ProjectStatus.COMPLETED)?.projects ?? [];
   const renderProjects = (projectsArray: typeof onTrackProjects, skeletonCount = 4) => {
     if (isLoading) {
       return Array.from({ length: skeletonCount }).map((_, idx) => (
@@ -42,7 +43,7 @@ function Page() {
       {/* Healthy Projects */}
       <section className="mb-10">
         <h2 className="text-lg font-semibold mb-4">Healthy Projects</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2  xl:grid-cols-3 gap-5">
           {renderProjects(onTrackProjects, 6)}
         </div>
       </section>
@@ -50,7 +51,7 @@ function Page() {
       {/* At Risk Projects */}
       <section className="mb-10">
         <h2 className="text-lg font-semibold mb-4">At Risk Projects</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2  xl:grid-cols-3 gap-5">
           {renderProjects(atRiskProjects, 4)}
         </div>
       </section>
@@ -58,8 +59,16 @@ function Page() {
       {/* Critical Projects */}
       <section>
         <h2 className="text-lg font-semibold mb-4">Critical Projects</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2  xl:grid-cols-3 gap-5">
           {renderProjects(criticalProjects, 4)}
+        </div>
+      </section>
+
+      {/* Completed Projects */}
+      <section>
+        <h2 className="text-lg font-semibold mb-4">Completed Projects</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2  xl:grid-cols-3 gap-5">
+          {renderProjects(completedProjects, 4)}
         </div>
       </section>
     </div>

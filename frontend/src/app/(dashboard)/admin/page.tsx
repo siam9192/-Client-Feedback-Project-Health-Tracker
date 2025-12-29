@@ -30,7 +30,6 @@ function page() {
 
   return (
     <div className="w-full">
-     
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
         {metadata.map((data) => (
           <MetadataCard key={data.label} data={data} />

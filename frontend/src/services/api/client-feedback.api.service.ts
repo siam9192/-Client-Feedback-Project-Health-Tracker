@@ -1,20 +1,13 @@
 "use server";
-
-import { Params } from "@/types";
-import {
-  CreateEmployeeCheckInPayload,
-  EmployeeCheckIn,
-  PendingCheckIn,
-} from "@/types/employee-checkin.type";
+import { ClientFeedback, CreateClientFeedbackPayload } from "@/types/client-feedback.type";
+import {} from "@/types/employee-checkin.type";
 import { IResponse } from "@/types/response.type";
 import axiosInstance from "@/utils/axiosInstance";
 import { AxiosError } from "axios";
 
-export async function getPendingCheckins(params: Params) {
+export async function createClientFeedback(payload: CreateClientFeedbackPayload) {
   try {
-    const res = await axiosInstance.get<IResponse<PendingCheckIn[]>>("/employee-checkins/pending", {
-      params,
-    });
+    const res = await axiosInstance.post<IResponse<null>>("/client-feedbacks", payload);
     return res.data;
   } catch (err) {
     const error = err as AxiosError<{ message?: string }>;
@@ -25,9 +18,9 @@ export async function getPendingCheckins(params: Params) {
   }
 }
 
-export async function createEmployeeCheckin(payload: CreateEmployeeCheckInPayload) {
+export async function getLatestClientFeedback() {
   try {
-    const res = await axiosInstance.post<IResponse<EmployeeCheckIn>>("/employee-checkins", payload);
+    const res = await axiosInstance.get<IResponse<ClientFeedback>>("/client-feedbacks/latest");
     return res.data;
   } catch (err) {
     const error = err as AxiosError<{ message?: string }>;

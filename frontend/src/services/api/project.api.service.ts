@@ -70,7 +70,6 @@ export async function getProjectHealthGroups() {
   }
 }
 
-
 export async function getAssignedProjects(params: Params) {
   try {
     const res = await axiosInstance.get<IResponse<AssignedProject[]>>("/projects/assigned", {
@@ -86,7 +85,6 @@ export async function getAssignedProjects(params: Params) {
     throw new Error(message);
   }
 }
-
 
 export async function getProjectRisks(id: string, params: Params) {
   try {

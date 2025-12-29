@@ -12,11 +12,11 @@ import { UserRole } from "@/types/user.type";
 import { getTotalPages } from "@/utils/helpers";
 import { useState } from "react";
 
-function Page() {
+function page() {
   const [page, setPage] = useState(1);
 
   const { data, isLoading, refetch } = useQuery<IResponse<AssignedProject[]>>(
-    "project-health-groups",
+    "assigned-projects",
     () => getAssignedProjects({ page }),
   );
 
@@ -38,7 +38,7 @@ function Page() {
           Array.from({ length: 10 }).map((_, index) => <ProjectCardSkeleton key={index} />)
         ) : (meta?.totalResults ?? 0 > 0) ? (
           projects.map((project) => (
-            <AssignedProjectCard key={project._id} project={project} role={UserRole.EMPLOYEE} />
+            <AssignedProjectCard key={project._id} project={project} role={UserRole.CLIENT} />
           ))
         ) : (
           <div className="col-span-full text-center text-gray-400 py-20">
@@ -59,4 +59,4 @@ function Page() {
   );
 }
 
-export default Page;
+export default page;

@@ -1,10 +1,10 @@
-import type { Metadata } from "../../types";
+import { DashboardSummary } from "@/types";
 
 interface Props {
-  data: Metadata;
+  data: DashboardSummary;
 }
 
-const MetadataCard = ({ data }: Props) => {
+const DashboardSummaryCard = ({ data }: Props) => {
   const Icon = data.icon;
 
   return (
@@ -27,4 +27,4 @@ const MetadataCard = ({ data }: Props) => {
   );
 };
 
-export default MetadataCard;
+export default DashboardSummaryCard;

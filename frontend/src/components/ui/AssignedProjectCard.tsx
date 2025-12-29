@@ -6,12 +6,16 @@ import ActivitiesDialog from "../sections/ActivitiesDialog";
 import ProjectDetailsDialog from "../sections/ProjectDetailsDialog";
 import SubmitCheckinModal from "../sections/SubmitCheckinModal";
 import { formatEnumLabel, getProjectStatusColor } from "@/utils/helpers";
+import AddRiskModal from "../sections/AddRiskModal";
+import SubmitFeedbackModal from "../sections/SubmitFeedbackModal";
+import { UserRole } from "@/types/user.type";
 
 interface ProjectCardProps {
   project: AssignedProject;
+  role: UserRole.CLIENT | UserRole.EMPLOYEE;
 }
 
-function AssignedProjectCard({ project }: ProjectCardProps) {
+function AssignedProjectCard({ project, role }: ProjectCardProps) {
   const [showActivities, setShowActivities] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
 
@@ -54,7 +58,7 @@ function AssignedProjectCard({ project }: ProjectCardProps) {
       <div className="mb-3">
         <span
           className={`inline-block px-3 py-1 rounded-full text-xs font-semibold tracking-wide ${getProjectStatusColor(
-            project.status
+            project.status,
           )}`}
         >
           {formatEnumLabel(project.status)}
@@ -65,13 +69,17 @@ function AssignedProjectCard({ project }: ProjectCardProps) {
       <div className="flex justify-between text-sm mb-4">
         <div>
           <p className="text-gray-500">Health Score</p>
-          <p className={`font-semibold ${getProjectStatusColor(project.status, { withBg: false })}`}>
+          <p
+            className={`font-semibold ${getProjectStatusColor(project.status, { withBg: false })}`}
+          >
             {project.healthScore}%
           </p>
         </div>
         <div>
           <p className="text-gray-500">{hasStarted ? "Deadline" : "Start Date"}</p>
-          <p className="font-medium text-gray-700">{hasStarted ? endDate.toDateString() : startDate.toDateString()}</p>
+          <p className="font-medium text-gray-700">
+            {hasStarted ? endDate.toDateString() : startDate.toDateString()}
+          </p>
         </div>
       </div>
 
@@ -111,18 +119,18 @@ function AssignedProjectCard({ project }: ProjectCardProps) {
         {project.checkinPending && (
           <SubmitCheckinModal projectId={project._id} progress={project.progressPercentage} />
         )}
+        {project.feedbackPending && <SubmitFeedbackModal projectId={project._id} />}
 
-        <button
-          type="button"
-          className="text-sm font-semibold text-red-600 hover:text-red-800 transition"
-        >
-          Add Risk
-        </button>
+        {role === UserRole.EMPLOYEE ? <AddRiskModal projectId={project._id} /> : null}
       </div>
 
       {/* Dialogs */}
-      {showActivities && <ActivitiesDialog id={project._id} onClose={() => setShowActivities(false)} />}
-      {showDetails && <ProjectDetailsDialog id={project._id} onClose={() => setShowDetails(false)} />}
+      {showActivities && (
+        <ActivitiesDialog id={project._id} onClose={() => setShowActivities(false)} />
+      )}
+      {showDetails && (
+        <ProjectDetailsDialog id={project._id} onClose={() => setShowDetails(false)} />
+      )}
     </div>
   );
 }

@@ -9,9 +9,8 @@ import { getCurrentUser } from "@/services/api/user.api.service";
 const context = createContext<UseQueryResult<IResponse<CurrentUser>> | null>(null);
 
 function CurrentUserProvider({ children }: { children: ReactNode }) {
-  
   const result = useQuery<IResponse<CurrentUser>>("getCurrentUser", () => getCurrentUser());
- 
+
   return <context.Provider value={result}>{children}</context.Provider>;
 }
 

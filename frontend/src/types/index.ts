@@ -5,10 +5,10 @@ export interface LayoutProps extends Readonly<{
   children: ReactNode;
 }> {}
 
-export interface Metadata {
+export interface DashboardSummary {
   label: string;
   icon: LucideIcon;
-  value: number;
+  value: number | string;
 }
 
 export interface Params {

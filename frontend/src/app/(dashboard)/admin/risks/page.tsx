@@ -37,7 +37,7 @@ export default function ProjectRisksPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 min-h-[200px]">
         {isLoading ? (
           Array.from({ length: 10 }).map((_, index) => <RiskCardSkeleton key={index} />)
-        ) : meta?.totalResults?? 0 > 0 ? (
+        ) : (meta?.totalResults ?? 0 > 0) ? (
           risks.map((risk) => <RiskCard key={risk._id} risk={risk} />)
         ) : (
           <div className="col-span-full text-center text-gray-400 py-20">

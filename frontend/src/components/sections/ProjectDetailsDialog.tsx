@@ -137,11 +137,21 @@ export default function ProjectDetailsDialog({ id, onClose }: Props) {
 
             <div className="flex flex-wrap gap-4">
               {/* Client */}
-              <TeamAvatar name={project.client.name} picture={project.client.profilePicture} role="Client" highlight />
+              <TeamAvatar
+                name={project.client.name}
+                picture={project.client.profilePicture}
+                role="Client"
+                highlight
+              />
 
               {/* Employees */}
               {project.employees.map((emp) => (
-                <TeamAvatar key={emp._id} name={emp.name} picture={emp.profilePicture} role="Employee" />
+                <TeamAvatar
+                  key={emp._id}
+                  name={emp.name}
+                  picture={emp.profilePicture}
+                  role="Employee"
+                />
               ))}
             </div>
           </div>
@@ -167,15 +177,14 @@ function TeamAvatar({
   highlight,
 }: {
   name: string;
-  picture?:string
+  picture?: string;
   role: string;
   highlight?: boolean;
-  
 }) {
   return (
     <div className="flex flex-col items-center gap-1">
       <img
-        src={picture??DEFAULT_PROFILE_PICTURE}
+        src={picture ?? DEFAULT_PROFILE_PICTURE}
         className={`size-10 rounded-full ring-2 ${highlight ? "ring-indigo-500" : "ring-gray-300"}`}
         alt=""
       />

@@ -1,80 +1,92 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { queryCache } from "@/utils/queryCache";
 
 type UseQueryOptions = {
   enabled?: boolean;
   staleTime?: number;
 };
+
 export type UseQueryResult<T> = {
   data: T | null;
   isLoading: boolean;
-  isRefetching: boolean;
+  isFetching: boolean;
   isSuccess: boolean;
   isError: boolean;
   error: any;
   refetch: () => void;
-  refetchAsync: () => Promise<void>;
 };
+
 function useQuery<T>(
   key: string,
   queryFn: () => Promise<T>,
-  options: UseQueryOptions = {}
+  options: UseQueryOptions = {},
 ): UseQueryResult<T> {
   const { enabled = true, staleTime = 0 } = options;
 
+  // 1. Keep a stable reference to the query function
+  const queryFnRef = useRef(queryFn);
+  useEffect(() => {
+    queryFnRef.current = queryFn;
+  }, [queryFn]);
+
   const [data, setData] = useState<T | null>(() => {
     const cached = queryCache.get(key);
-    if (cached && Date.now() - cached.timestamp < staleTime) return cached.data;
-    return null;
+    return cached ? cached.data : null;
   });
-  const [isLoading, setIsLoading] = useState(enabled && !data);
-  const [isRefetching, setIsRefetching] = useState(false);
+
+  const [isFetching, setIsFetching] = useState(false);
   const [error, setError] = useState<any>(null);
 
+  const isLoading = isFetching && !data;
   const isSuccess = !!data && !error;
   const isError = !!error;
 
-  const fetchData = useCallback(
-    async (manual = false) => {
-      if (manual) setIsRefetching(true);
-      else setIsLoading(true);
-      setError(null);
+  // 2. fetchData now only changes if 'key' changes
+  const fetchData = useCallback(async () => {
+    setIsFetching(true);
+    setError(null);
+    try {
+      const result = await queryFnRef.current(); // Use the ref
+      queryCache.set(key, result);
+      setData(result);
+    } catch (err) {
+      setError(err);
+    } finally {
+      setIsFetching(false);
+    }
+  }, [key]); // Removed queryFn from dependencies
 
-      try {
-        const cached = queryCache.get(key);
-        if (!manual && cached && Date.now() - cached.timestamp < staleTime) {
-          setData(cached.data);
-          return;
-        }
-
-        const result = await queryFn();
-        queryCache.set(key, result);
-        setData(result);
-      } catch (err) {
-        setError(err);
-      } finally {
-        if (manual) setIsRefetching(false);
-        else setIsLoading(false);
-      }
-    },
-    [key, queryFn, staleTime]
-  );
-
-  // on mount or enabled change
+  // 3. Handle Invalidation
   useEffect(() => {
-    if (enabled) fetchData();
-  }, [enabled, fetchData]);
+    const unsubscribe = queryCache.subscribe((invalidatedKey) => {
+      if (invalidatedKey === key) {
+        fetchData();
+      }
+    });
+    return () => unsubscribe();
+  }, [key, fetchData]);
+
+  // 4. Initial Mount / Stale Check
+  useEffect(() => {
+    if (!enabled) return;
+
+    const cached = queryCache.get(key);
+    const isExpired = !cached || Date.now() - cached.timestamp > staleTime;
+
+    if (isExpired) {
+      fetchData();
+    }
+  }, [enabled, key, staleTime, fetchData]);
 
   return {
     data,
     isLoading,
-    isRefetching,
+    isFetching,
     isSuccess,
     isError,
     error,
-    refetch: () => fetchData(true),
-    refetchAsync: () => fetchData(true),
+    refetch: fetchData,
   };
 }
 

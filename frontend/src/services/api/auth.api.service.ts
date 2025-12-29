@@ -32,9 +32,9 @@ export async function login(payload: LoginPayload) {
 
 export async function logout() {
   try {
-   const cookieStore = await cookies()
-   cookieStore.delete("accessToken")
-   cookieStore.delete("refreshToken")
+    const cookieStore = await cookies();
+    cookieStore.delete("accessToken");
+    cookieStore.delete("refreshToken");
   } catch (err) {
     const error = err as AxiosError<{ message?: string }>;
 

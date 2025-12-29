@@ -1,4 +1,6 @@
+import z from "zod";
 import { Project, ProjectEmployee } from "./project.type";
+import validators from "@/utils/validators";
 
 export interface ProjectRisk {
   _id: string;
@@ -14,6 +16,8 @@ export interface ProjectRisk {
   createdAt: string;
   updatedAt: string;
 }
+
+export type CreateRiskPayload = z.infer<typeof validators.createRiskSchema>;
 
 export enum IssueStatus {
   OPEN = "open",

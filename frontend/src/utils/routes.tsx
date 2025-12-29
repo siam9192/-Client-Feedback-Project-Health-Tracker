@@ -30,7 +30,6 @@ export const adminRoutes = [
   },
 ];
 
-
 export const employeeRoutes = [
   {
     label: "Dashboard",
@@ -43,7 +42,6 @@ export const employeeRoutes = [
     icon: ClipboardList,
   },
 ];
-
 
 export const clientRoutes = [
   {
@@ -58,10 +56,8 @@ export const clientRoutes = [
   },
 ];
 
-
 export default {
-    [UserRole.ADMIN]:adminRoutes,
-    [UserRole.EMPLOYEE]:employeeRoutes,
-    [UserRole.CLIENT]:clientRoutes
-} 
-
+  [UserRole.ADMIN]: adminRoutes,
+  [UserRole.EMPLOYEE]: employeeRoutes,
+  [UserRole.CLIENT]: clientRoutes,
+};

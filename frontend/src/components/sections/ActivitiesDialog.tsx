@@ -37,7 +37,7 @@ function ActivitiesDialog({ id, onClose }: Props) {
 
     const isBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 20;
 
-    if (isBottom && page < getTotalPages(meta.totalResults,meta.limit)) {
+    if (isBottom && page < getTotalPages(meta.totalResults, meta.limit)) {
       setPage((p) => p + 1);
     }
   };
@@ -48,7 +48,7 @@ function ActivitiesDialog({ id, onClose }: Props) {
       document.body.style.overflow = "";
     };
   }, []);
-  
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
       <div className="bg-white w-full max-w-lg rounded-2xl shadow-xl p-6 relative">
@@ -75,7 +75,7 @@ function ActivitiesDialog({ id, onClose }: Props) {
             <div key={index}>
               {/* Date */}
               <p className="text-sm font-medium text-gray-500 mb-3">
-                {formatTimelineDate(group.date)}
+                {formatTimelineDate(new Date(group.activities[0].createdAt).toLocaleDateString())}
               </p>
 
               <div className="space-y-4 border-l-2 border-gray-200 pl-4">

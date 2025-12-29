@@ -62,7 +62,7 @@ function ProjectsMissingCheckIns() {
           </table>
         </div>
       ) : projects.length === 0 ? (
-        <div className="text-center py-10 text-gray-500">🎉 No projects are missing check-ins</div>
+        <div className="text-center py-10 text-gray-500"> No projects are missing check-ins</div>
       ) : (
         <div>
           <div className="overflow-x-auto">
@@ -128,9 +128,15 @@ function ProjectsMissingCheckIns() {
 
                       {/* Last Check-in */}
                       <td>
-                        {" "}
-                        {new Date().toDateString().replace("/", "-")},
-                        {new Date().toLocaleTimeString()}{" "}
+                        {project.lastCheckInAt ? (
+                          <>
+                            {" "}
+                            {new Date(project.lastCheckInAt).toLocaleDateString()},
+                            {new Date(project.lastCheckInAt).toLocaleTimeString()}{" "}
+                          </>
+                        ) : (
+                          "Unspecified"
+                        )}
                       </td>
                     </tr>
                   );
