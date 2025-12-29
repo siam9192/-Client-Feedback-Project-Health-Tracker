@@ -108,7 +108,7 @@ class MetadataService {
       assignedProjects: assignedProjects.length,
       pendingWeeklyCheckIns,
       openRisks,
-      avgProgress: avgProgressResult?.avgProgress ?? 0,
+      avgProgress: parseFloat(avgProgressResult?.avgProgress ?? 0).toFixed(2),
     };
   }
 
