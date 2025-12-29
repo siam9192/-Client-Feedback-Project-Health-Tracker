@@ -15,6 +15,7 @@ import {
   getCurrentWeek,
   getRecentWeeks,
   getWeeksBetweenDates,
+  hasStarted,
   objectId,
 } from '../../helpers/utils.helper';
 import { PaginationOptions } from '../../types';
@@ -225,6 +226,8 @@ class ProjectService {
     await project.save();
     return finalScore;
   }
+
+
   async getAssignedProjects(
     authUser: AuthUser,
     filterQuery: ProjectsFilterQuery,
@@ -266,15 +269,14 @@ class ProjectService {
       .exec();
 
     const { week, year } = getCurrentWeek();
-    const now = Date.now();
     const isEmployee = authUser.role === UserRole.EMPLOYEE;
 
     // Started projects only
     const startedProjectIds = projects
-      .filter((p) => new Date(p.startDate).getTime() <= now)
+      .filter((p) => hasStarted(p.startDate))
       .map((p) => p._id);
 
-    // Fetch submissions (check-ins or feedbacks)
+    // Fetch submissions feedbacks
     const submissions = isEmployee
       ? await EmployeeCheckInModel.find({
           project: { $in: startedProjectIds },
@@ -289,13 +291,15 @@ class ProjectService {
           year,
         }).select('project');
 
+     
+
     const submittedProjectIdSet = new Set(
       submissions.map((s) => s.project.toString()),
     );
 
     // Attach pending flags
-    const data = projects.map((project) => {
-      const isPending = !submittedProjectIdSet.has(project._id.toString());
+      const data = projects.map((project) => {
+      const isPending = !submittedProjectIdSet.has(project._id.toString()) && hasStarted(project.startDate);
 
       return {
         ...project,

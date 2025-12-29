@@ -14,7 +14,7 @@ const moduleRoutes: TModuleRoutes = [
   { path: '/users', router: userRouter },
   { path: '/projects', router: projectRouter },
   { path: '/employee-checkins', router: employeeCheckInRouter },
-  { path: '/client-feedback', router: clientFeedbackRouter },
+  { path: '/client-feedbacks', router: clientFeedbackRouter },
   { path: '/project-risks', router: projectRiskRouter },
   { path: '/metadata', router: metadataRouter },
 ];

@@ -1,6 +1,6 @@
 import AppError from '../../errors/AppError';
 import { calculatePagination } from '../../helpers/pagination.helper';
-import { getCurrentWeek, objectId } from '../../helpers/utils.helper';
+import { getCurrentWeek, hasStarted, objectId } from '../../helpers/utils.helper';
 import { PaginationOptions } from '../../types';
 import httpStatus from '../../utils/http-status';
 import {
@@ -19,6 +19,7 @@ class ClientFeedbackService {
     authUser: AuthUser,
     payload: CreateClientFeedbackPayload,
   ) {
+    console.log(payload)
     // Validate payload
     payload = clientFeedbackValidations.createFeedbackSchema.parse(payload);
 
@@ -33,6 +34,11 @@ class ClientFeedbackService {
       throw new AppError(
         httpStatus.FORBIDDEN,
         "You can't submit feedback in this project ",
+      );
+
+      if(!hasStarted(project.startDate)) throw new AppError(
+        httpStatus.FORBIDDEN,
+        "This Project not started yet",
       );
     const { week, year } = getCurrentWeek();
 
@@ -50,13 +56,14 @@ class ClientFeedbackService {
         ' Feedback already submitted  for this week',
       );
 
-    const { issueDescription, ...others } = payload;
+    const { issueDescription,projectId ,...others } = payload;
 
     // Arrange create data
     const data = {
       ...others,
+      project:objectId(projectId),
       client: objectId(authUser.profileId),
-      ...(issueDescription ? { description: issueDescription } : {}),
+      ...(issueDescription ? {issue:{ description: issueDescription }} : {}),
       issueFlagged: !!issueDescription,
       week: week,
       year,

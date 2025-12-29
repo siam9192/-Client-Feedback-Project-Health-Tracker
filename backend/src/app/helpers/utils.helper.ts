@@ -73,3 +73,8 @@ export  function getProjectHealthStatus(score: number) {
       ? ProjectStatus.AT_RISK
       : ProjectStatus.ON_TRACK;
 }
+
+
+export function hasStarted (startDate:Date) {
+  return new Date(startDate).getTime() <= Date.now()
+}
