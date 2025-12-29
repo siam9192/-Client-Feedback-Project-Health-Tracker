@@ -37,12 +37,12 @@ function ProjectsMissingCheckIns() {
   return (
     <div className="bg-white shadow rounded-lg p-6 mt-10">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-semibold text-gray-800">Projects No Check-ins Last 14 Days</h2>
+        <h2 className="text-xl font-semibold text-gray-800">No Check-ins Last 14 Days</h2>
         <span className="text-sm text-gray-500">Total: {meta?.totalResults}</span>
       </div>
 
       {isLoading ? (
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto custom-scrollbar">
           <table className="min-w-full divide-y divide-gray-200 text-sm">
             <thead className="bg-gray-100">
               <tr>
@@ -65,7 +65,7 @@ function ProjectsMissingCheckIns() {
         <div className="text-center py-10 text-gray-500"> No projects are missing check-ins</div>
       ) : (
         <div>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto custom-scrollbar">
             <table className="min-w-full divide-y divide-gray-200 text-sm">
               <thead className="bg-gray-100">
                 <tr>

@@ -6,7 +6,11 @@ import { toast } from "sonner";
 import Link from "next/link";
 
 import validators from "@/utils/validators";
-import { useLoginMutation } from "@/services/query-client/auth.client.service";
+import useMutation from "@/hooks/useMutation";
+import { LoginPayload } from "@/types/auth.type";
+import { login } from "@/services/api/auth.api.service";
+import { useRouter } from "next/navigation";
+
 
 type LoginFormValues = z.infer<typeof validators.loginSchema>;
 
@@ -19,19 +23,22 @@ function page() {
   } = useForm<LoginFormValues>({
     resolver: zodResolver(validators.loginSchema),
   });
-  const { mutate } = useLoginMutation();
+  const { mutate } = useMutation<null, LoginPayload>(login);;
+
+  const router = useRouter()
 
   const onSubmit = (data: LoginFormValues) => {
     mutate(data, {
       onSuccess: () => {
         toast.success("Login successful");
         reset();
+        router.replace("/")
       },
       onError: (err) => {
-        console.log(err);
+        
         toast.error(err.message);
       },
-      invalidateKeys: ["currenUser"],
+      invalidateKeys: ["current-user"],
     });
   };
 

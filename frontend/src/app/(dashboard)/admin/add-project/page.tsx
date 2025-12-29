@@ -71,11 +71,11 @@ export default function AddProjectPage() {
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="space-y-6 bg-white p-6 rounded-2xl shadow-md border border-gray-100"
+        className="space-y-6 bg-white p-6 rounded-2xl shadow-md border border-gray-100 font-secondary"
       >
         {/* Project Name */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Project Name</label>
+          <label className="block text-sm font-medium text-gray-700 mb-2 ">Project Name</label>
           <input
             type="text"
             {...register("name")}
@@ -94,7 +94,7 @@ export default function AddProjectPage() {
             {...register("description")}
             placeholder="Brief description of the project"
             rows={4}
-            className={`w-full border rounded-lg px-4 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+            className={`w-full border rounded-lg px-4 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 max-h-72 ${
               errors.description ? "border-red-500" : "border-gray-300"
             }`}
           />
@@ -215,7 +215,7 @@ export default function AddProjectPage() {
           )}
         </div>
         {/* Submit */}
-        <div className="flex justify-end mt-4">
+        <div className="flex justify-end mt-4 font-primary">
           <button
             type="submit"
             disabled={isSubmitting || isLoading}

@@ -14,7 +14,7 @@ export const adminRoutes = [
     icon: LayoutDashboard,
   },
   {
-    label: "Projects",
+    label: "Projects Group",
     href: "/admin/projects",
     icon: FolderKanban,
   },

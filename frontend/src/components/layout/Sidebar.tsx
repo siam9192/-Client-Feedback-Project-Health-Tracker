@@ -2,7 +2,7 @@
 
 import { logout } from "@/services/api/auth.api.service";
 import { UserRole } from "@/types/user.type";
-import routes, { adminRoutes } from "@/utils/routes";
+import routes from "@/utils/routes";
 import { LogOut } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -23,7 +23,7 @@ export default function Sidebar() {
     router.push("/");
   };
   return (
-    <aside className="h-screen w-52 xl:w-64 bg-white  shadow-sm flex flex-col justify-between">
+    <aside className="h-screen w-full lg:w-52 xl:w-64 bg-white  shadow-sm flex flex-col justify-between">
       {/* Logo */}
       <div>
         <div className="h-16 flex items-center px-6 ">
@@ -51,7 +51,7 @@ export default function Sidebar() {
                 }
               `}
               >
-                {/* Active Indicator */}
+               
                 <span
                   className={`
                   h-5 w-1 rounded-full

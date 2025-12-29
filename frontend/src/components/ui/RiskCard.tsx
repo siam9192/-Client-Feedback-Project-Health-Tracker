@@ -1,17 +1,18 @@
 import { ProjectRisk } from "@/types/risk.type";
-import { getRiskSeverityColor, getRiskStatusColor } from "@/utils/helpers";
+import { formatEnumLabel, getRiskSeverityColor, getRiskStatusColor } from "@/utils/helpers";
 
 interface Props {
-  risk: ProjectRisk;
+  risk: ProjectRisk 
 }
+
 function RiskCard({ risk }: Props) {
   const createdAt = new Date(risk.createdAt);
+
   return (
     <div className="group relative rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition hover:shadow-lg">
+      {/* Severity  */}
       <span
-        className={`absolute left-0 top-0 h-full w-1 rounded-l-2xl ${getRiskSeverityColor(
-          risk.severity,
-        )}`}
+        className={`absolute left-0 top-0 h-full w-1 rounded-l-2xl ${getRiskSeverityColor(risk.severity)}`}
       />
 
       {/* Header */}
@@ -20,21 +21,36 @@ function RiskCard({ risk }: Props) {
           <h3 className="text-lg font-semibold text-gray-900 group-hover:text-indigo-600 transition">
             {risk.title}
           </h3>
+
+          {/* Project info */}
           <p className="mt-1 text-xs text-gray-500">
-            Project : Build software • Owner: {risk.employee.name}
+            Project: {risk.project.name} • Status: {formatEnumLabel(risk.project.status)}
+          </p>
+          <p className="text-xs text-gray-500">
+            Health Score: {risk.project.healthScore ?? "N/A"}
+          </p>
+
+          {/* Owner info  */}
+          <p className="mt-1 text-xs text-gray-500">
+            Created By: {risk.employee.name}
           </p>
         </div>
 
+        {/* Risk badges */}
         <div className="flex flex-col items-end gap-1">
           <span
-            className={`px-3 py-1 text-xs font-semibold rounded-full ${getRiskSeverityColor(risk.severity)}`}
+            className={`px-3 py-1 text-xs font-semibold rounded-full ${getRiskSeverityColor(
+              risk.severity,
+            )}`}
           >
-            {risk.severity}
+            {formatEnumLabel(risk.severity)}
           </span>
           <span
-            className={`px-3 py-1 text-xs font-medium rounded-full ${getRiskStatusColor(risk.status)}`}
+            className={`px-3 py-1 text-xs font-medium rounded-full ${getRiskStatusColor(
+              risk.status,
+            )}`}
           >
-            {risk.status}
+            {formatEnumLabel(risk.status)}
           </span>
         </div>
       </div>
@@ -53,12 +69,14 @@ function RiskCard({ risk }: Props) {
         <span>
           Created on{" "}
           <span className="font-medium text-gray-700">
-            {createdAt.toLocaleDateString()},{createdAt.toLocaleTimeString()}
+            {createdAt.toLocaleDateString()}, {createdAt.toLocaleTimeString()}
           </span>
         </span>
 
         {risk.resolvedAt ? (
-          <span className="font-medium text-green-600">Resolved on {risk.resolvedAt}</span>
+          <span className="font-medium text-green-600">
+            Resolved on {new Date(risk.resolvedAt).toLocaleDateString()}
+          </span>
         ) : (
           <span className="italic text-gray-400">Not resolved yet</span>
         )}

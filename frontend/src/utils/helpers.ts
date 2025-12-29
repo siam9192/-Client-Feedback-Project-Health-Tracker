@@ -47,7 +47,7 @@ export function formatEnumLabel(value: string) {
 }
 
 export function getTotalPages(total: number, limit: number) {
-  return Math.floor(total / limit);
+  return Math.ceil(total / limit);
 }
 
 export function getRiskSeverityColor(

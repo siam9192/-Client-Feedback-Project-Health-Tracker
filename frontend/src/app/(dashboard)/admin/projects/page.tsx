@@ -57,7 +57,7 @@ function Page() {
       </section>
 
       {/* Critical Projects */}
-      <section>
+      <section className="mb-10">
         <h2 className="text-lg font-semibold mb-4">Critical Projects</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2  xl:grid-cols-3 gap-5">
           {renderProjects(criticalProjects, 4)}

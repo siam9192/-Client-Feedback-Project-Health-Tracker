@@ -2,53 +2,43 @@
 
 
 :root {
-   /* ---------- Base ---------- */
-  --color-base-100: oklch(100% 0 0);          /* pure white */
-  --color-base-200: oklch(98% 0.005 240);     /* light gray bg */
-  --color-base-300: oklch(95% 0.01 240);      /* borders/dividers */
-  --color-base-content: oklch(18% 0.03 240);  /* primary text */
+   
+  --color-base-100: oklch(100% 0 0);     
+  --color-base-200: oklch(98% 0.005 240);   
+  --color-base-300: oklch(95% 0.01 240);    
+  --color-base-content: oklch(18% 0.03 240);  
 
-  /* ---------- Background / Foreground ---------- */
+ 
   --color-background: var(--color-base-300);
   --color-foreground: var(--color-base-content);
 
-  /* ---------- Brand ---------- */
-  /* Primary: Indigo / Purple-Blue */
+ 
   --color-primary: rgb(140, 0, 255);
   --color-primary-content: oklch(98% 0.01 265);
 
-  /* Secondary: Teal */
+  
   --color-secondary: rgb(255, 63, 127);
   --color-secondary-content: oklch(98% 0.01 175);
 
-  --color-accent: oklch(65% 0.25 160);        /* green accent */
+  --color-accent: oklch(65% 0.25 160);        
   --color-accent-content: oklch(98% 0.01 160);
 
-  /* ---------- Neutral UI ---------- */
-  --color-neutral: oklch(40% 0.04 240);       /* sidebar / muted buttons */
+ 
+  --color-neutral: oklch(40% 0.04 240);       
   --color-neutral-content: oklch(98% 0.01 240);
 
-  /* ---------- States ---------- */
-  --color-info: oklch(70% 0.20 220);          /* info badges */
+  
+  --color-info: oklch(70% 0.20 220);          
   --color-info-content: oklch(98% 0.01 220);
 
-  --color-success: oklch(65% 0.25 140);       /* completed tasks */
+  --color-success: oklch(65% 0.25 140);      
   --color-success-content: oklch(98% 0.01 140);
 
-  --color-warning: oklch(80% 0.25 80);        /* at-risk */
+  --color-warning: oklch(80% 0.25 80);        
   --color-warning-content: oklch(20% 0.05 80);
 
-  --color-error: oklch(65% 0.30 30);          /* blocked / overdue */
+  --color-error: oklch(65% 0.30 30);          
   --color-error-content: oklch(98% 0.01 30);
-
-  /* ---------- Layout ---------- */
-  --radius-selector: 1rem;
-  --radius-field: 0.375rem;
-  --radius-box: 0.75rem;
-
-  --border: 1px;
-  --depth: 1;
-  --noise: 0;
 
 
  --font-primary: 'Montserrat Variable', sans-serif;
@@ -62,11 +52,11 @@
   --color-base-300: var(--color-base-300);
   --color-base-content: var(--color-base-content);
   
- /* Core */
+ 
   --color-background: var(--color-background);
   --color-foreground: var(--color-foreground);
 
-  /* Brand */
+  
   --color-primary: var(--color-primary);
   --color-primary-content: var(--color-primary-content);
 
@@ -76,13 +66,12 @@
   --color-accent: var(--color-accent);
   --color-accent-content: var(--color-accent-content);
 
-  /* UI */
+  
   --color--muted: var(--color-base-300);
   --color--border: var(--color-base-300);
   --color--card: var(--color-base-100);
   --color--card-foreground: var(--color-foreground);
 
-  /* States */
   --color-info: var(--color-info);
   --color--success: var(--color-success);
   --color--warning: var(--color-warning);
@@ -109,4 +98,44 @@ button:hover {
 
 button:disabled:hover {
   cursor: default;
+}
+
+@keyframes slide-in-left {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in-left {
+  animation: slide-in-left 0.25s ease-out forwards;
+}
+
+
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-primary) transparent;
+}
+
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #94a3b8;
 }

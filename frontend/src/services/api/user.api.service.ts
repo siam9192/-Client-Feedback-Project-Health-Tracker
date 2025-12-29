@@ -1,13 +1,13 @@
 "use server";
 import { Params } from "@/types";
 import { IResponse } from "@/types/response.type";
-import { Client, Employee } from "@/types/user.type";
+import { Client, CurrentUser, Employee } from "@/types/user.type";
 import axiosInstance from "@/utils/axiosInstance";
 import { AxiosError } from "axios";
 
 export async function getCurrentUser() {
   try {
-    const res = await axiosInstance.get("/users/me");
+    const res = await axiosInstance.get<IResponse<CurrentUser>>("/users/me");
     return res.data;
   } catch (err) {
     const error = err as AxiosError<{ message?: string }>;

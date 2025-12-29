@@ -5,16 +5,22 @@ import RiskCardSkeleton from "@/components/ui/RiskCardSkeleton";
 import useQuery from "@/hooks/useQuery";
 import { getRisks } from "@/services/api/risk.api.service";
 import { IResponse } from "@/types/response.type";
-import { ProjectRisk } from "@/types/risk.type";
-import { useState } from "react";
+import { ProjectRisk, ProjectRiskSeverity } from "@/types/risk.type";
+import { useEffect, useState } from "react";
 import Pagination from "@/components/ui/Pagination";
-import { getTotalPages } from "@/utils/helpers";
+import { formatEnumLabel, getTotalPages } from "@/utils/helpers";
+
+ const severities =   [{label:"All",value:""},...Object.values(ProjectRiskSeverity).map(_=>({
+    label:formatEnumLabel(_),
+    value:_
+  }))]
 
 export default function ProjectRisksPage() {
   const [page, setPage] = useState(1);
+  const [severity,setSeverity] = useState("")
 
   const { data, isLoading, refetch } = useQuery<IResponse<ProjectRisk[]>>("risks", () =>
-    getRisks({ page }),
+    getRisks({ page,severity }),
   );
 
   const risks = data?.data ?? [];
@@ -22,9 +28,13 @@ export default function ProjectRisksPage() {
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
-    refetch();
   };
 
+  useEffect(()=>{
+    if(!isLoading) refetch()
+  },[page,severity])
+
+ 
   return (
     <div className="space-y-6">
       {/* Page Heading */}
@@ -32,7 +42,33 @@ export default function ProjectRisksPage() {
         <h1 className="text-2xl font-semibold text-gray-800">Project Risks</h1>
         <p className="text-sm text-gray-500">Track, assess, and mitigate project risks</p>
       </div>
+     <div className="mb-10 flex justify-end">
+  <div className="inline-flex rounded-xl bg-base-200 p-1 shadow-sm font-secondary">
+    {severities.map((sv) => {
+      const isActive = sv.value === severity;
 
+      return (
+        <button
+          key={sv.label}
+          onClick={() => setSeverity(sv.value)}
+          className={`
+            px-4 py-2 text-sm font-medium rounded-lg transition-all
+            focus:outline-none focus-visible:ring-2 focus-visible:ring-primary
+            ${
+              isActive
+                ? "bg-primary text-primary-content shadow"
+                : "text-base-content hover:bg-base-300"
+            }
+          `}
+        >
+          {sv.label}
+        </button>
+      );
+    })}
+  </div>
+</div>
+
+      
       {/* Risks List */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 min-h-[200px]">
         {isLoading ? (
@@ -50,7 +86,7 @@ export default function ProjectRisksPage() {
       {meta && risks.length > 0 && (
         <Pagination
           page={page}
-          totalPages={getTotalPages(meta.totalResults, meta?.limit)}
+          totalPages={getTotalPages(meta.totalResults, meta.limit)}
           onPageChange={handlePageChange}
         />
       )}

@@ -2,6 +2,7 @@ import Container from "@/components/layout/Container";
 import { BarChart2, MessageCircle, Zap } from "lucide-react";
 
 export default function Home() {
+  
   return (
     <div className=" bg-white">
       <Container>
@@ -18,7 +19,7 @@ export default function Home() {
             </h2>
 
             {/* Subtitle */}
-            <p className="mt-4 text-gray-600 text-base sm:text-lg leading-relaxed">
+            <p className="mt-4 text-gray-600 text-base sm:text-lg leading-relaxed font-secondary">
               Monitor project progress, track risks, and gather client feedback — all in one
               centralized dashboard designed for teams, managers, and clients.
             </p>
@@ -28,7 +29,7 @@ export default function Home() {
               <div className="rounded-lg border border-gray-100 p-4 flex flex-col items-center gap-2">
                 <BarChart2 className="w-6 h-6 text-indigo-600" />
                 <p className="font-semibold">Project Health</p>
-                <p className="mt-1 text-gray-500 text-center">
+                <p className="mt-1 text-gray-500 text-center font-secondary">
                   Track progress, deadlines, and risk levels in real time.
                 </p>
               </div>
@@ -36,7 +37,7 @@ export default function Home() {
               <div className="rounded-lg border border-gray-100 p-4 flex flex-col items-center gap-2">
                 <MessageCircle className="w-6 h-6 text-indigo-600" />
                 <p className="font-semibold">Client Feedback</p>
-                <p className="mt-1 text-gray-500 text-center">
+                <p className="mt-1 text-gray-500 text-center font-secondary">
                   Collect weekly feedback and identify issues early.
                 </p>
               </div>
@@ -44,7 +45,7 @@ export default function Home() {
               <div className="rounded-lg border border-gray-100 p-4 flex flex-col items-center gap-2">
                 <Zap className="w-6 h-6 text-indigo-600" />
                 <p className="font-semibold">Smart Insights</p>
-                <p className="mt-1 text-gray-500 text-center">
+                <p className="mt-1 text-gray-500 text-center font-secondary">
                   Make informed decisions with actionable project insights.
                 </p>
               </div>

@@ -1,6 +1,6 @@
 "use client";
 import { DashboardSummary } from "@/types";
-import DashboardSummaryCard from "../ui/MetadataCard";
+import DashboardSummaryCard from "../ui/DashboardSummaryCard";
 import { FolderKanban, ClipboardCheck, AlertTriangle, BarChart3 } from "lucide-react";
 import { IResponse } from "@/types/response.type";
 import { getDashboardSummary } from "@/services/api/metadata.api.service";
