@@ -114,8 +114,7 @@ class MetadataService {
 
   async getClientDashboardSummary(authUser: AuthUser) {
     const clientId = objectId(authUser.profileId);
-    const { week, year } = getCurrentWeek();
-    const today = new Date();
+  
     const assignedProjects = await ProjectModel.countDocuments({
       client: clientId,
     });

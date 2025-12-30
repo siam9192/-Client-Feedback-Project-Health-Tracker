@@ -64,8 +64,8 @@ async function main() {
         return projectService.createProject({
           ...project,
           // Use .length - 1 to avoid out-of-bounds undefined
-          clientId: clientIds[getRandomInt(clientIds.length - 1)].toString(),
-          employeeIds: employeeIds.slice(0, 5).map(id => id.toString()),
+          employee: employeeIds[getRandomInt(1)].toString(),
+          employeeIds: employeeIds.slice(0, 5).map(id => id.toString()), 
         } as any);
       }),
     );
@@ -78,7 +78,7 @@ async function main() {
       sampleRisks.map((risk) => ({
         ...risk,
         project: projectIds[getRandomInt(projectIds.length - 1)],
-        employee: employeeIds[getRandomInt(Math.min(employeeIds.length - 1, 4))]
+        employee: employeeIds[getRandomInt(1)]
       }))
     );
 

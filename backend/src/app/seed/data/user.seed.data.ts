@@ -122,15 +122,6 @@ export const sampleEmployees = [
 
 export const sampleClients = [
   {
-    name: 'Green Horizon Corp',
-    profilePicture: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=400&h=400&auto=format&fit=crop',
-    clientType: ClientType.COMPANY,
-    address: { street: 'Gulshan 2, Avenue 4', city: 'Dhaka', country: 'Bangladesh', postcode: '1212' },
-    contactInfo: { email: 'info@greenhorizon.com', phone: '01810000004' },
-    email: 'gh.admin@example.com',
-    password: 'cli123',
-  },
-  {
     name: 'Zubair Al-Mahmud',
     gender: Gender.MALE,
     profilePicture: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=200&h=200&auto=format&fit=crop',
@@ -138,6 +129,15 @@ export const sampleClients = [
     address: { street: 'House 45, Road 2', city: 'Sylhet', country: 'Bangladesh', postcode: '3100' },
     contactInfo: { phone: '01810000005' },
     email: 'zubair.m@example.com',
+    password: 'cli123',
+  },
+  {
+    name: 'Green Horizon Corp',
+    profilePicture: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=400&h=400&auto=format&fit=crop',
+    clientType: ClientType.COMPANY,
+    address: { street: 'Gulshan 2, Avenue 4', city: 'Dhaka', country: 'Bangladesh', postcode: '1212' },
+    contactInfo: { email: 'info@greenhorizon.com', phone: '01810000004' },
+    email: 'gh.admin@example.com',
     password: 'cli123',
   },
   {

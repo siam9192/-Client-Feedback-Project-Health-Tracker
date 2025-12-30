@@ -98,139 +98,72 @@ class ProjectService {
   }
 
   async updateProjectHealthScore(id: string) {
-    const projectId = objectId(id);
-    const project = await ProjectModel.findById(projectId);
-    if (!project) return;
+   const projectId = objectId(id);
+   const project = await ProjectModel.findById(projectId);
+   if (!project) return;
 
-    const clamp = (n: number) => Math.max(0, Math.min(100, n));
+  const clamp = (n: number) => Math.max(0, Math.min(100, n));
+  const now = Date.now();
+  const startDate = new Date(project.startDate).getTime();
+  const endDate = new Date(project.endDate).getTime();
 
-    const startDate = new Date(project.startDate);
-    const endDate = new Date(project.endDate);
-    const now = Date.now();
+  //  Run all DB queries in parallel for speed
+  const recentWeeks = getRecentWeeks(2);
+  const weekFilter = { $or: recentWeeks.map((w) => ({ week: w.week, year: w.year })) };
 
-    const totalDuration = endDate.getTime() - startDate.getTime();
-    const elapsed = now - startDate.getTime();
+  const [recentFeedbacks, totalFeedbacksCount, recentCheckins, totalCheckinsCount, activeRisks, activeIssues] = await Promise.all([
+    ClientFeedbackModel.find({ project: projectId, ...weekFilter }).sort({ createdAt: -1 }),
+    ClientFeedbackModel.countDocuments({ project: projectId }),
+    EmployeeCheckInModel.find({ project: projectId, ...weekFilter }),
+    EmployeeCheckInModel.countDocuments({ project: projectId }),
+    ProjectRiskModel.find({ project: projectId, status: ProjectRiskStatus.OPEN }),
+    ClientFeedbackModel.find({ project: projectId, issueFlagged: true }),
+  ]);
 
-    const availableDurationPercentage =
-      elapsed > 0 ? clamp((elapsed / totalDuration) * 100) : 0;
+  //  Logic helpers
+  const isNew = getCurrentWeek().week === getISOweekYear(new Date(startDate)).week;
 
-    const projectStartWeek = getISOweekYear(startDate);
-    const currentWeek = getCurrentWeek();
-    const recentWeeks = getRecentWeeks(2);
-
-    const isProjectStartedThisWeek =
-      currentWeek.week === projectStartWeek.week &&
-      currentWeek.year === projectStartWeek.year;
-
-    //  CLIENT SATISFACTION
-    const recentFeedbacks = await ClientFeedbackModel.find({
-      project: projectId,
-      $or: recentWeeks.map((w) => ({ week: w.week, year: w.year })),
-    }).sort({ createdAt: -1 });
-
-    let clientPoints = 100;
-
-    if (recentFeedbacks.length === 0) {
-      const totalFeedbacks = await ClientFeedbackModel.countDocuments({
-        project: projectId,
-      });
-
-      if (totalFeedbacks === 0 && isProjectStartedThisWeek) {
-        clientPoints = 0; // Too early, no feedback expected
-      } else {
-        clientPoints = 50; // No recent feedback penalty
-      }
-    } else {
-      const avgRating =
-        recentFeedbacks.reduce(
-          (acc, curr) => acc + curr.satisfactionRating,
-          0,
-        ) / recentFeedbacks.length;
-
-      clientPoints = (avgRating / 5) * 100;
+  const calculateMetric = (recent: any[], total: number, key: string) => {
+    if (recent.length > 0) {
+      const avg = recent.reduce((acc, curr) => acc + curr[key], 0) / recent.length;
+      return (avg / 5) * 100;
     }
+    return isNew ? 100 : total === 0 ? 0 : 50;
+  };
 
-    clientPoints = clamp(clientPoints);
+  //  Score Calculations
+  const clientPoints = clamp(calculateMetric(recentFeedbacks, totalFeedbacksCount, 'satisfactionRating'));
+  const employeePoints = clamp(calculateMetric(recentCheckins, totalCheckinsCount, 'confidenceLevel'));
 
-    // EMPLOYEE CONFIDENCE
-    const recentCheckins = await EmployeeCheckInModel.find({
-      project: projectId,
-      $or: recentWeeks.map((w) => ({ week: w.week, year: w.year })),
-    });
+  // Progress Points
+  const totalDuration = endDate - startDate;
+  const elapsed = now - startDate;
+  const expectedProgress = totalDuration > 0 ? clamp((elapsed / totalDuration) * 100) : 100;
+  const actualProgress = project.progressPercentage || 0;
+  let progressPoints = clamp(actualProgress < expectedProgress ? 100 - (expectedProgress - actualProgress) * 2 : 100);
 
-    let employeePoints = 100;
+  // Risk Points
+  let riskPoints = 100;
+  activeRisks.forEach(risk => {
+    if (risk.severity === ProjectRiskSeverity.HIGH) riskPoints -= 15;
+    else if (risk.severity === ProjectRiskSeverity.MEDIUM) riskPoints -= 10;
+    else riskPoints -= 5;
+  });
 
-    if (recentCheckins.length > 0) {
-      const avgConfidence =
-        recentCheckins.reduce((acc, curr) => acc + curr.confidenceLevel, 0) /
-        recentCheckins.length;
+  riskPoints -= (activeIssues.length * 5);
+  if (riskPoints <= 20 && expectedProgress >= 90) riskPoints -= 20; // Critical near deadline
 
-      employeePoints = (avgConfidence / 5) * 100;
-    } else {
-      const totalCheckins = await EmployeeCheckInModel.countDocuments({
-        project: projectId,
-      });
+  //  Final Calculation
+  const finalScore = Math.round(
+    clientPoints * 0.3 +
+    employeePoints * 0.25 +
+    progressPoints * 0.25 +
+    riskPoints * 0.20
+  );
 
-      if (totalCheckins === 0 && !isProjectStartedThisWeek) {
-        employeePoints = 0;
-      } else {
-        employeePoints = 50;
-      }
-    }
 
-    employeePoints = clamp(employeePoints);
-
-    // PROJECT PROGRESS
-    let expectedProgress = availableDurationPercentage;
-    if (elapsed < 0) expectedProgress = 0;
-
-    const actualProgress = project.progressPercentage || 0;
-
-    let progressPoints = 100;
-    if (actualProgress < expectedProgress) {
-      progressPoints = 100 - (expectedProgress - actualProgress) * 2;
-    }
-
-    progressPoints = clamp(progressPoints);
-
-    //  RISKS & ISSUES
-    const activeRisks = await ProjectRiskModel.find({
-      project: projectId,
-      status: ProjectRiskStatus.OPEN,
-    });
-
-    const activeIssues = await ClientFeedbackModel.find({
-      project: projectId,
-      issueFlagged: true,
-    });
-
-    let riskPoints = 100;
-
-    for (const risk of activeRisks) {
-      if (risk.severity === ProjectRiskSeverity.HIGH) riskPoints -= 15;
-      if (risk.severity === ProjectRiskSeverity.MEDIUM) riskPoints -= 10;
-      if (risk.severity === ProjectRiskSeverity.LOW) riskPoints -= 5;
-    }
-
-    riskPoints -= activeIssues.length * 5;
-
-    // Extra penalty if deadline is so close and have too much risk and issues
-    if (riskPoints <= 20 && availableDurationPercentage <= 10) {
-      riskPoints -= 20;
-    }
-
-    riskPoints = clamp(riskPoints);
-
-    //  FINAL CALCULATION
-    const finalScore = Math.round(
-      clientPoints * 0.3 +
-        employeePoints * 0.2 +
-        progressPoints * 0.25 +
-        riskPoints * 0.25,
-    );
-
-    // SET NEW STATUS
-    const newStatus = getProjectHealthStatus(finalScore);
+  // Set new status
+   const newStatus = getProjectHealthStatus(finalScore);
 
     const oldStatus = project.status;
 
