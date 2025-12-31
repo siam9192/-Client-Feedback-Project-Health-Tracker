@@ -257,8 +257,7 @@ This acts as a **penalty pillar** starting from 100 points.
 2. **Email:** `gh.admin@example.com`
    **Password:** `cli123`
 
-   
 ### Live Applications
-- **Frontend:** <a href="https://project-pulse.up.railway.app" target="_blank" rel="noopener noreferrer">https://project-pulse.up.railway.app</a>
-- **Backend:** <a href="https://project-pulse-server.up.railway.app" target="_blank" rel="noopener noreferrer">https://project-pulse-server.up.railway.app</a>
+- **Frontend:** https://project-pulse.up.railway.app
+- **Backend:** https://project-pulse-server.up.railway.app
 
