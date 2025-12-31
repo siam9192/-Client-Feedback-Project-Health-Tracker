@@ -255,5 +255,5 @@ Whenever the logic is triggered:
 
 ### Live Applications
 - **Frontend:** https://project-pulse.up.railway.app
-- **Backend:** https://project-pulse.up.railway-server.app
+- **Backend:** https://project-pulse-server.up.railway.app
 
