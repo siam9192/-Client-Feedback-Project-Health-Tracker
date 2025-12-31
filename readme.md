@@ -94,7 +94,7 @@ NEXT_PUBLIC_API_BASE_URL = "server api url"
 The project includes a seed script to populate the database with **initial demo data** (users, projects, riks).
 
 ### Location
-/backend/src/seed/script.ts
+/backend/src/app/seed/script.ts
 
 
 ###  Run Seed Script
@@ -169,8 +169,7 @@ The **Project Health Score** is an automated metric (scaled 0–100) calculated 
 
 
 ## 1. Score Composition (Weights)
-
-The final score is a weighted average of the following four components:
+The final score is calculated as a weighted sum of the following four components.
 
 | Pillar                | Weight | Data Source                                         |
 |-----------------------|--------|---------------------------------------------------|
@@ -220,14 +219,15 @@ This acts as a **penalty pillar** starting from 100 points.
 
 
 
-### 3. Automation
-Whenever the logic is triggered:
-
-1. **Recalculation:** Fetch latest DB records and generate new `finalScore`.
-2. **Status Mapping:** Map the score to a status:  
-   - 0–59 → Critical  
-   - 60–79 → At Risk  
-   - 80–100 → On Track
+###  Automated Recalculation
+- The system periodically recalculates the project health score by:
+  - Fetching the **latest records** from the database
+  - Re-evaluating all metric values
+  - Generating an updated `finalScore`
+- Recalculation is triggered when:
+  - New client feedback or employee check-in is submitted
+  - A scheduled cron job runs
+  
 
 
 
@@ -244,7 +244,7 @@ Whenever the logic is triggered:
 #### 👨‍💼 Employees
 1. **Email:** arif.emp@gmail.com  
    **Password:** emp123
-2. **Email:** gh.admin@example.com  
+2. **Email:** farhana.emp@company.com   
    **Password:** emp123
 
 #### 🧑 Clients
