@@ -9,7 +9,7 @@ export async function login(payload: LoginPayload) {
     const res = await axiosInstance.post("/auth/login", payload);
 
     if (res.data.success) {
-      const setCookieHeader = res.headers["set-cookie"]; // string[] | undefined
+      const setCookieHeader = res.headers["set-cookie"];
       const cookieStore = await cookies();
 
       if (setCookieHeader) {
@@ -47,9 +47,28 @@ export async function logout() {
 }
 
 export async function getNewAccessToken() {
-  try {
-    await axiosInstance.get("/auth/access-token");
+  const cookieStore = await cookies();
 
+  try {
+    const refreshToken = cookieStore.get("refreshToken")?.value;
+
+    const res = await axiosInstance.get("/auth/access-token", {
+      headers: {
+        Authorization: `Bearer ${refreshToken}`,
+      },
+    });
+    if (res.data.success) {
+      const setCookieHeader = res.headers["set-cookie"];
+      const cookieStore = await cookies();
+
+      if (setCookieHeader) {
+        const parsedCookie = SetCookie.parse(setCookieHeader);
+        parsedCookie.forEach((val) => {
+          const { name, value, ...options } = val as any;
+          cookieStore.set(name, value, options);
+        });
+      }
+    }
     return null;
   } catch (err) {
     const error = err as AxiosError<{ message?: string }>;

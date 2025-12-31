@@ -85,7 +85,7 @@ export default function AddProjectEmployeeDialog({
                 }`}
               >
                 <img
-                  src={DEFAULT_PROFILE_PICTURE}
+                  src={employee.profilePicture ?? DEFAULT_PROFILE_PICTURE}
                   alt=""
                   className="h-10 w-10 rounded-full object-cover outline-2 outline-offset-1 outline-secondary"
                 />

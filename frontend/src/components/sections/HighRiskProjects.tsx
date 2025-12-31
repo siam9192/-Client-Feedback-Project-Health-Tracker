@@ -38,8 +38,8 @@ export default function HighRiskProjects() {
           ))}
         </div>
       ) : totalResults === 0 ? (
-        <div className="bg-white shadow rounded-lg p-6 mt-6 text-gray-500 text-center">
-          🎉 No high-risk projects at the moment
+        <div className="bg-white  rounded-lg p-6 mt-6 text-gray-500 text-center">
+          No high-risk projects at the moment
         </div>
       ) : (
         <div>

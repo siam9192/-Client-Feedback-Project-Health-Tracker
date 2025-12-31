@@ -1,4 +1,7 @@
-import { ProjectRiskSeverity, ProjectRiskStatus } from "../../modules/project-risk/project-risk.interface";
+import {
+  ProjectRiskSeverity,
+  ProjectRiskStatus,
+} from '../../modules/project-risk/project-risk.interface';
 
 export const sampleRisks = [
   {
@@ -9,13 +12,13 @@ export const sampleRisks = [
   },
   {
     title: 'Delayed API responses',
-    severity:ProjectRiskSeverity.MEDIUM,
+    severity: ProjectRiskSeverity.MEDIUM,
     mitigationPlan: 'Implement caching and optimize API endpoints.',
     status: ProjectRiskStatus.OPEN,
   },
   {
     title: 'Data breach',
-    severity:ProjectRiskSeverity.LOW,
+    severity: ProjectRiskSeverity.LOW,
     mitigationPlan: 'Use encryption, conduct regular security audits.',
     status: ProjectRiskStatus.OPEN,
   },
@@ -27,7 +30,7 @@ export const sampleRisks = [
   },
   {
     title: 'Dependency library vulnerabilities',
-  severity: ProjectRiskSeverity.LOW,
+    severity: ProjectRiskSeverity.LOW,
     mitigationPlan: 'Regularly update dependencies and monitor CVEs.',
     status: ProjectRiskStatus.OPEN,
   },
@@ -45,20 +48,21 @@ export const sampleRisks = [
   },
   {
     title: 'Incorrect reporting metrics',
-  severity: ProjectRiskSeverity.MEDIUM,
+    severity: ProjectRiskSeverity.MEDIUM,
     mitigationPlan: 'Audit data processing pipelines regularly.',
     status: ProjectRiskStatus.OPEN,
   },
   {
     title: 'Slow page load times',
-   severity: ProjectRiskSeverity.HIGH,
+    severity: ProjectRiskSeverity.HIGH,
     mitigationPlan: 'Optimize images, use CDN, and lazy load content.',
     status: ProjectRiskStatus.OPEN,
   },
   {
     title: 'Legal compliance issues',
     severity: ProjectRiskSeverity.LOW,
-    mitigationPlan: 'Consult legal experts and ensure all regulations are followed.',
+    mitigationPlan:
+      'Consult legal experts and ensure all regulations are followed.',
     status: ProjectRiskStatus.OPEN,
   },
 ];

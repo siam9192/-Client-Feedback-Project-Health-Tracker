@@ -2,7 +2,7 @@ import { ProjectRiskStatus } from "@/types/risk.type";
 import z from "zod";
 
 const loginSchema = z.object({
-  email: z.email("Email is required"),
+  email: z.email("Invalid email"),
   password: z.string().min(1, "Password is required"),
 });
 
@@ -54,7 +54,9 @@ const createRiskSchema = z.object({
     .min(5, "Title must be at least 5 characters")
     .max(100, "Title must be in  100 characters"),
   severity: z.enum(["low", "medium", "high"]),
-  mitigationPlan: z.string().min(10, "Please provide a detailed mitigation plan"),
+  mitigationPlan: z
+    .string()
+    .min(10, "Please provide a detailed (at least 10 characters) mitigation plan"),
   status: z.enum(ProjectRiskStatus, "Invalid status"),
   projectId: z.string().nonempty("Invalid Project ID"),
 });

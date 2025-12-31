@@ -114,7 +114,7 @@ class MetadataService {
 
   async getClientDashboardSummary(authUser: AuthUser) {
     const clientId = objectId(authUser.profileId);
-  
+
     const assignedProjects = await ProjectModel.countDocuments({
       client: clientId,
     });

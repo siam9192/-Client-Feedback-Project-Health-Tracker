@@ -24,7 +24,8 @@ The platform supports **role-based access** for Admins, Employees, and Clients, 
 ### Backend
 - Node.js
 - Express.js (REST API)
--  Zod Validation
+- TypeScript
+- Zod Validation
 - MongoDB with Mongoose
 - JWT Authentication
 
@@ -163,6 +164,7 @@ npm run seed
 
 
 
+## Project Health Score Calculation
 The **Project Health Score** is an automated metric (scaled 0–100) calculated by weighing four distinct performance pillars. This score determines the project's official status (e.g., Healthy, At Risk, or Critical).
 
 ---

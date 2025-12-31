@@ -16,6 +16,12 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   let userResponse;
+
+  const redirectHome = () => {
+    const redirectUrl = new URL("/", request.url);
+    return NextResponse.redirect(redirectUrl);
+  };
+
   try {
     userResponse = await getCurrentUser();
   } catch (err) {
@@ -36,9 +42,8 @@ export async function middleware(request: NextRequest) {
       // Allow login access
       return NextResponse.next();
     }
-    // Redirect to login page with redirect query
-    const redirectUrl = new URL("/", request.url);
-    return NextResponse.redirect(redirectUrl);
+    // Redirect to default home page
+    return redirectHome();
   }
 
   //  Determine user role
@@ -48,12 +53,10 @@ export async function middleware(request: NextRequest) {
 
   const isAllowed = allowedRoutes.some((route) => route.test(pathname));
 
-  // If route is allowed and not restricted
-  if (isAllowed) {
-    return NextResponse.next();
-  }
+  // If route is not allowed
+  if (!isAllowed) return redirectHome();
 
-  //  Default allow
+  //   allow
   return NextResponse.next();
 }
 

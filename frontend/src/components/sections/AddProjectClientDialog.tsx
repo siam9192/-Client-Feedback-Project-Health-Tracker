@@ -80,7 +80,7 @@ function AddProjectClientDialog({ selectedClientId, onClose }: AddProjectClientD
                 }`}
               >
                 <img
-                  src={DEFAULT_PROFILE_PICTURE}
+                  src={client.profilePicture ?? DEFAULT_PROFILE_PICTURE}
                   alt=""
                   className="size-10 rounded-full object-cover  outline-2 outline-offset-1 outline-secondary"
                 />

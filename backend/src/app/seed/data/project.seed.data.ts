@@ -1,10 +1,83 @@
+const today = new Date();
+
+const startDate = today.toDateString();
+
+const endDateDate = new Date(today);
+endDateDate.setMonth(endDateDate.getMonth() + 3);
+
+const endDate = endDateDate.toDateString();
+
 export const sampleProjects = [
+  {
+    name: 'Project Management Dashboard',
+    description:
+      'Building a web-based dashboard to track projects, tasks, and team performance.',
+    startDate: startDate,
+    endDate: endDate,
+  },
+  {
+    name: 'Online Learning Platform',
+    description:
+      'Creating an e-learning platform with video courses, quizzes, and certifications.',
+    startDate: startDate,
+    endDate: endDate,
+  },
+  {
+    name: 'Healthcare Appointment System',
+    description:
+      'A system for booking and managing doctor appointments online.',
+    startDate: startDate,
+    endDate: endDate,
+  },
+  {
+    name: 'Social Media Scheduler',
+    description:
+      'A content-aware scheduler for managing posts across multiple social platforms.',
+    startDate: startDate,
+    endDate: endDate,
+  },
+  {
+    name: 'Inventory Management System',
+    description:
+      'Automating inventory tracking, stock alerts, and supplier management.',
+    startDate: startDate,
+    endDate: endDate,
+  },
+  {
+    name: 'Movie Ticket Booking App',
+    description:
+      'A full-stack application for booking movie tickets with seat selection.',
+    startDate: startDate,
+    endDate: '2026-01-31',
+  },
+  {
+    name: 'Vehicle Rental Platform',
+    description:
+      'Developing a vehicle rental system with branch-wise role-based access.',
+    startDate: startDate,
+    endDate: '2026-04-01',
+  },
+  {
+    name: 'Blog Sharing Website',
+    description:
+      'A platform for users to write, share, and interact with blog content.',
+    startDate: startDate,
+    endDate: '2025-12-31',
+  },
+  {
+    name: 'AI Customer Support Chatbot',
+    description:
+      'Building an AI-powered chatbot to handle customer support queries.',
+    startDate: startDate,
+    endDate: '2026-03-18',
+  },
+
   {
     name: 'E-Commerce Mobile App',
     description:
       'Developing a high-performance cross-platform mobile application for online retail.',
     startDate: '2025-10-01',
-    endDate: '2026-03-30', // Ongoing (approx 50% through)
+    endDate: '2026-03-30',
   },
   {
     name: 'AI Data Analytics Dashboard',

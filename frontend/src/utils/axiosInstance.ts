@@ -18,17 +18,16 @@ axiosInstance.interceptors.request.use(async function (config) {
   return config;
 });
 
-// axiosInstance.interceptors.response.use(undefined, async (error) => {
-//   if (error.response?.status === 401) {
-//     try {
-//        await getNewAccessToken();
-//        return axiosInstance(error.config);
-//     } catch (error) {
-//        await logout()
-//     }
+axiosInstance.interceptors.response.use(undefined, async (error) => {
+  if (error.response?.status === 401) {
+    try {
+      await getNewAccessToken();
+      return axiosInstance(error.config);
+    } catch (error) {
+      await logout();
+    }
+  }
 
-//   }
-
-//   throw error;
-// });
+  throw error;
+});
 export default axiosInstance;

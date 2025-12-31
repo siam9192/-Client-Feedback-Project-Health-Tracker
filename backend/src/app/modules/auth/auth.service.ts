@@ -63,13 +63,12 @@ class AuthService {
 
       let decoded;
       try {
-        // Step 2: Verify and decode the token
         decoded = jwtHelper.verifyToken(
           oldRefreshToken,
           envConfig.jwt.refresh_token_secret as string,
         ) as JwtPayload;
 
-        if (!decoded || !decoded.sub) {
+        if (!decoded) {
           throw new Error();
         }
       } catch (error) {
@@ -83,15 +82,10 @@ class AuthService {
         envConfig.jwt.access_token_secret as string,
         envConfig.jwt.access_token_expire as string,
       );
-      // Generate refresh token
-      const refreshToken = jwtHelper.generateToken(
-        tokenPayload,
-        envConfig.jwt.refresh_token_secret as string,
-        envConfig.jwt.refresh_token_expire as string,
-      );
 
-      return { accessToken, refreshToken };
+      return { accessToken };
     } catch (error) {
+      console.log(error);
       throw new AppError(
         httpStatus.BAD_REQUEST,
         'Invalid or expired refresh token.',

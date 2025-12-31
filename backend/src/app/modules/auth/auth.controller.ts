@@ -1,4 +1,5 @@
 import envConfig from '../../config/env.config';
+import AppError from '../../errors/AppError';
 import catchAsync from '../../utils/catchAsync';
 import httpStatus from '../../utils/http-status';
 import { sendSuccessResponse } from '../../utils/response';
@@ -54,7 +55,9 @@ class AuthController {
   });
 
   getNewAccessToken = catchAsync(async (req, res) => {
-    const refreshToken = req.cookies?.refreshToken;
+    const refreshToken = req.headers?.authorization?.replace('Bearer', '');
+    if (!refreshToken) throw new Error();
+
     const result = await authService.getNewAccessToken(refreshToken);
     res.cookie('accessToken', result.accessToken, {
       httpOnly: true,

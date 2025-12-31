@@ -16,7 +16,7 @@ function Page() {
   const [page, setPage] = useState(1);
 
   const { data, isLoading, refetch } = useQuery<IResponse<AssignedProject[]>>(
-    "project-health-groups",
+    "assigned-projects",
     () => getAssignedProjects({ page }),
   );
 
