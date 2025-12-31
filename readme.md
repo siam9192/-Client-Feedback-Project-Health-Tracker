@@ -242,22 +242,23 @@ This acts as a **penalty pillar** starting from 100 points.
 ###  Demo Login Credentials
 
 #### 👑 Admin
-- **Email:** admin@gmail.com  
-- **Password:** adm123
+- **Email:** `admin@gmail.com` 
+- **Password:** `adm123`
 
 #### 👨‍💼 Employees
-1. **Email:** arif.emp@gmail.com  
-   **Password:** emp123
-2. **Email:** farhana.emp@company.com   
-   **Password:** emp123
+1. **Email:** `arif.emp@gmail.com`  
+   **Password:** `emp123`
+2. **Email:** `farhana.emp@company.com`   
+   **Password:** `emp123`
 
 #### 🧑 Clients
-1. **Email:** zubair.m@example.com  
-   **Password:** cli123
-2. **Email:** gh.admin@example.com
-   **Password:** cli123
+1. **Email:** `zubair.m@example.com`  
+   **Password:** `cli123`
+2. **Email:** `gh.admin@example.com`
+   **Password:** `cli123`
 
+   
 ### Live Applications
-- **Frontend:** https://project-pulse.up.railway.app
-- **Backend:** https://project-pulse-server.up.railway.app
+- **Frontend:** <a href="https://project-pulse.up.railway.app" target="_blank" rel="noopener noreferrer">https://project-pulse.up.railway.app</a>
+- **Backend:** <a href="https://project-pulse-server.up.railway.app" target="_blank" rel="noopener noreferrer">https://project-pulse-server.up.railway.app</a>
 
