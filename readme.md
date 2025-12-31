@@ -217,7 +217,11 @@ This acts as a **penalty pillar** starting from 100 points.
 - **Critical Deadline Penalty:**  
   If the project is >90% through its timeline and risk score ≤20 → additional −20 pts
 
-
+### Final Score =  
+(ClientSatisfaction × 0.30) +  
+(EmployeeConfidence × 0.25) +  
+(ScheduleAdherence × 0.25) +  
+(RiskLevel × 0.20)
 
 ###  Automated Recalculation
 - The system periodically recalculates the project health score by:
