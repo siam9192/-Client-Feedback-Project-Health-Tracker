@@ -227,9 +227,9 @@ Whenever the logic is triggered:
 
 1. **Recalculation:** Fetch latest DB records and generate new `finalScore`.
 2. **Status Mapping:** Map the score to a status:  
-   - 0–40 → Critical  
-   - 41–70 → Warning  
-   - 71–100 → Healthy
+   - 0–59 → Critical  
+   - 60–79 → At Risk  
+   - 80–100 → On Track
 3. **Activity Logging:**  
    If the status changes (e.g., Healthy → Warning), the system automatically creates a **System Activity Log** indicating the shift and the specific health score that caused it.
 

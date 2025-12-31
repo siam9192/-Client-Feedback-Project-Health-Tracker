@@ -40,9 +40,9 @@ function Page() {
         subtitle="Projects categorized by current health status"
       />
 
-      {/* Healthy Projects */}
+      {/* On Track Projects */}
       <section className="mb-10">
-        <h2 className="text-lg font-semibold mb-4">Healthy Projects</h2>
+        <h2 className="text-lg font-semibold mb-4">On Track Projects</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2  xl:grid-cols-3 gap-5">
           {renderProjects(onTrackProjects, 6)}
         </div>
