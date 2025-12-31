@@ -147,7 +147,7 @@ export default function AddProjectPage() {
               {client && (
                 <div className="flex gap-4 items-center">
                   <img
-                    src={DEFAULT_PROFILE_PICTURE}
+                     src={client.profilePicture??DEFAULT_PROFILE_PICTURE}
                     alt=""
                     className="size-8 rounded-full object-cover outline-2 outline-offset-1 outline-secondary"
                   />
@@ -191,7 +191,7 @@ export default function AddProjectPage() {
                       className="flex items-center gap-2 bg-indigo-50 px-3 py-1 rounded-full text-sm"
                     >
                       <img
-                        src={DEFAULT_PROFILE_PICTURE}
+                        src={emp.profilePicture??DEFAULT_PROFILE_PICTURE}
                         alt={emp.name}
                         className="h-6 w-6 rounded-full object-cover"
                       />

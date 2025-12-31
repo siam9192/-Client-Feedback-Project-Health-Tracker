@@ -1,4 +1,3 @@
-## Project Health Score Calculation Logic
 #  Project Management & Health Monitoring System
 
 ## Project Overview
@@ -10,7 +9,7 @@ Based on this score, each project is categorized as **On Track**, **At Risk**, o
 
 The platform supports **role-based access** for Admins, Employees, and Clients, ensuring secure and relevant interactions for each user type.
 
----
+
 
 ##  Tech Stack Used
 
@@ -31,7 +30,7 @@ The platform supports **role-based access** for Admins, Employees, and Clients, 
 
 
 
----
+
 
 ##  Backend Choice
 
@@ -167,7 +166,7 @@ npm run seed
 ## Project Health Score Calculation
 The **Project Health Score** is an automated metric (scaled 0–100) calculated by weighing four distinct performance pillars. This score determines the project's official status (e.g., Healthy, At Risk, or Critical).
 
----
+
 
 ## 1. Score Composition (Weights)
 
@@ -221,8 +220,7 @@ This acts as a **penalty pillar** starting from 100 points.
 
 
 
-## 3. Automation & Status Updates
-
+### 3. Automation
 Whenever the logic is triggered:
 
 1. **Recalculation:** Fetch latest DB records and generate new `finalScore`.
@@ -230,8 +228,7 @@ Whenever the logic is triggered:
    - 0–59 → Critical  
    - 60–79 → At Risk  
    - 80–100 → On Track
-3. **Activity Logging:**  
-   If the status changes (e.g., Healthy → Warning), the system automatically creates a **System Activity Log** indicating the shift and the specific health score that caused it.
+
 
 
 
@@ -253,7 +250,7 @@ Whenever the logic is triggered:
 #### 🧑 Clients
 1. **Email:** zubair.m1@example.com  
    **Password:** cli123
-2. **Email:** zubair.m2@example.com  
+2. **Email:** gh.admin@example.com
    **Password:** cli123
 
 ### Live Applications
